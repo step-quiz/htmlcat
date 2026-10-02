@@ -9,6 +9,8 @@
 //   dedent(text)            — treu la indentació comuna i les
 //                             línies buides del principi i del final
 //   lineColAt(text, offset) — { line, col } (1-based) d'una posició
+//   makeLineIndex(text)     — funció offset → { line, col } ràpida, per
+//                             als analitzadors (cerca binària)
 // ════════════════════════════════════════════════════════
 
 /**
@@ -55,5 +57,30 @@ export function lineColAt(text, offset) {
   return {
     line: before.split('\n').length,
     col: offset - lastNewline,
+  };
+}
+
+/**
+ * Prepara una funció que tradueix posicions a { line, col } (1-based)
+ * sense recórrer el text cada vegada. Per als analitzadors, que en
+ * calculen moltes.
+ *
+ * @param {string} text
+ * @returns {(offset: number) => { line: number, col: number }}
+ */
+export function makeLineIndex(text) {
+  const starts = [0];
+  for (let i = 0; i < text.length; i++) {
+    if (text[i] === '\n') starts.push(i + 1);
+  }
+  return function at(offset) {
+    let lo = 0;
+    let hi = starts.length - 1;
+    while (lo < hi) {
+      const mid = (lo + hi + 1) >> 1;
+      if (starts[mid] <= offset) lo = mid;
+      else hi = mid - 1;
+    }
+    return { line: lo + 1, col: offset - starts[lo] + 1 };
   };
 }
