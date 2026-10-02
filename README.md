@@ -31,6 +31,16 @@ Per això HTMLCat els fa visibles:
 | [`docs/BLUEPRINT.md`](docs/BLUEPRINT.md) | Document de disseny inicial (en anglès), basat en l'anàlisi de PyCat i JSCat. |
 | [`CLAUDE.md`](CLAUDE.md) | Normes per a les IA que hi treballin (en anglès). |
 
+## Provar-ho a l'ordinador
+
+Cal Python 3 (per servir el web) i Node 22 (per als tests). Des de l'arrel del projecte:
+
+```bash
+cd site && python3 -m http.server 8000
+```
+
+i obre <http://localhost:8000>. Els tests s'expliquen a [`docs/STATE.md`](docs/STATE.md) §4.
+
 ## Principis
 
 - HTML, CSS i JavaScript «vanilla»: sense *frameworks*, sense pas de compilació, sense dependències.

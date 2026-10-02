@@ -26,20 +26,41 @@ aquest document (i el codi).
 
 ## 2. Què hi ha ara
 
-**Fase actual: 0 (arrencada).** Només hi ha documentació; encara no hi ha codi.
+**Fase actual: 0 (arrencada), acabada pel que fa al repositori.** Falta
+configurar Cloudflare Pages (§5). Encara no hi ha cap capítol ni l'editor.
 
 ```
-README.md          Presentació del projecte (per a persones)
-CLAUDE.md          Normes per a les IA que hi treballin
-LICENSE            Text de les dues llicències (CC BY-NC-SA 4.0 i MIT)
-LLICENCIA.md       Explicació de la llicència en català
-docs/STATE.md      Aquest document
-docs/BLUEPRINT.md  Disseny inicial i lliçons apreses de PyCat i JSCat (en anglès)
-docs/CURRICULUM.md Pla de capítols i reptes (proposta)
+README.md              Presentació del projecte (per a persones)
+CLAUDE.md              Normes per a les IA que hi treballin
+LICENSE                Text de les dues llicències (CC BY-NC-SA 4.0 i MIT)
+LLICENCIA.md           Explicació de la llicència en català
+.editorconfig          UTF-8, LF, 2 espais
+.gitignore             node_modules/
+.github/workflows/ci.yml  Executa tots els tests a cada push i PR
+
+docs/STATE.md          Aquest document
+docs/BLUEPRINT.md      Disseny inicial i lliçons apreses de PyCat i JSCat (en anglès)
+docs/CURRICULUM.md     Pla de capítols i reptes (proposta)
+
+site/                  ← l'única carpeta que es publica
+  index.html           Portada provisional «En construcció»
+  404.html             Pàgina d'error (Cloudflare la fa servir sola)
+  _headers             Capçaleres de seguretat per a Cloudflare Pages
+  LICENSE.txt          Còpia de LICENSE (el peu hi enllaça)
+  css/tokens.css       Variables de disseny (colors, espais, tipografies) i tema fosc
+  css/base.css         Reinici, tipografia i estructura bàsica (.pagina, .peu, .avis, .logo)
+  img/logo.svg         Logotip (també és la icona de la pestanya)
+  js/util/text.js      Mòdul pur: normalizeNewlines, dedent, lineColAt
+
+tests/
+  package.json         Només Playwright (versió fixada), per als tests
+  package-lock.json
+  unit/*.test.mjs      Tests unitaris dels mòduls purs (node:test)
+  course-static.mjs    Comprovacions estàtiques de site/ (sense dependències)
+  course-browser.mjs   Comprovacions amb Chromium a 360 i 1280 px
 ```
 
-Estructura prevista quan hi hagi codi: vegeu BLUEPRINT §4.1. Resum: `site/` és
-l'única carpeta que es publica; `tests/` i `docs/` queden fora del web.
+Estructura completa prevista: BLUEPRINT §4.1.
 
 ---
 
@@ -81,24 +102,38 @@ Detall a BLUEPRINT §11. Entre parèntesis, l'opció recomanada.
 
 ## 4. Tests
 
-Encara no n'hi ha. La resta de la fase 0 crearà:
+Des de l'arrel del projecte:
 
 ```bash
-node --test tests/unit/          # tests unitaris (sense dependències)
-node tests/course-static.mjs     # comprovacions de l'estructura del curs
-node tests/course-browser.mjs    # comprovacions amb navegador (Playwright), des de tests/
+node --test tests/unit/*.test.mjs     # tests unitaris (sense dependències)
+node tests/course-static.mjs          # comprovacions estàtiques de site/ (sense dependències)
+cd tests && npm ci && node course-browser.mjs   # navegador (Playwright + Chromium)
 ```
 
-i una GitHub Action (`.github/workflows/ci.yml`) que els executarà a cada push i
-a cada pull request.
+(Al contenidor de Claude Code al núvol Chromium ja hi és: no cal
+`npx playwright install`. En un Codespace o a GitHub sí que cal.)
+
+| Test | Què comprova |
+|---|---|
+| `unit/` | Cada mòdul pur de `site/js/` (ara: `util/text.js`) |
+| `course-static.mjs` | Cada pàgina té `<!DOCTYPE html>`, `lang="ca"`, `charset` i `<title>`; cap `style=""` ni `on…=""`; cap tabulació; tots els enllaços relatius existeixen; sintaxi de cada `.js`; cap menció de CC BY-NC-ND |
+| `course-browser.mjs` | Cada pàgina, a 360 i 1280 px: cap error a la consola, cap petició fallida, cap petició a servidors externs, cap desplaçament horitzontal |
+
+La GitHub Action `.github/workflows/ci.yml` executa els tres a cada push i a
+cada pull request (pestanya «Actions» de GitHub).
 
 ---
 
 ## 5. Publicació
 
-Cloudflare Pages encara no està configurat. Quan hi hagi la carpeta `site/`:
-branca de producció `main`, sense ordre de compilació, carpeta de sortida
-`site`, domini `htmlcat.step-quiz.net` (pendent de D8).
+**Pendent de configurar** (ho ha de fer el propietari a Cloudflare):
+branca de producció `main`, *framework preset* «None», ordre de compilació
+buida, carpeta de sortida `site`, domini `htmlcat.step-quiz.net` (pendent de D8).
+Després, cal comprovar que `/tests/` i `/docs/` donen la pàgina 404.
+
+`site/_headers` afegeix `X-Content-Type-Options`, `Referrer-Policy` i
+`Permissions-Policy`. **No** s'hi han de posar COOP/COEP (BLUEPRINT §3.2, A15)
+ni capçaleres de memòria cau llarga.
 
 ---
 
@@ -106,10 +141,10 @@ branca de producció `main`, sense ordre de compilació, carpeta de sortida
 
 Fases del BLUEPRINT §9.1:
 
-- [ ] **Fase 0 — Arrencada.** Fet: documentació bàsica i llicència.
-      Falta: `.editorconfig`, carpetes `site/` i `tests/`, GitHub Action amb tests
-      inicials, `site/index.html` «En construcció», `site/_headers`, configurar
-      Cloudflare Pages i comprovar que `/tests/` i `/docs/` no es publiquen.
+- [ ] **Fase 0 — Arrencada.** Fet: documentació, llicència, `site/` provisional,
+      tests i GitHub Action. Falta: configurar Cloudflare Pages i comprovar que
+      `/tests/` i `/docs/` no es publiquen.
+- [ ] Respondre les decisions pendents D1–D12 (§3).
 - [ ] **Fase 1 — Nucli del llenguatge:** tokenitzador d'HTML, analitzador de CSS, arbre del codi font, ressaltat.
 - [ ] **Fase 2 — Editor, previsualització i editor lliure.**
 - [ ] **Fase 3 — Revisor de codi v1 i panell ⚠ Problemes.**

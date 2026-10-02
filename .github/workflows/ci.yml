@@ -1,0 +1,33 @@
+# Executa tots els tests d'HTMLCat a cada push i a cada pull request.
+# Resultats: pestanya «Actions» del repositori a GitHub.
+name: Comprova HTMLCat
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Tests unitaris
+        run: node --test tests/unit/*.test.mjs
+
+      - name: Comprovacions estàtiques del web
+        run: node tests/course-static.mjs
+
+      - name: Instal·la Playwright
+        working-directory: tests
+        run: |
+          npm ci --no-audit --no-fund
+          npx playwright install --with-deps chromium
+
+      - name: Comprovacions amb navegador
+        working-directory: tests
+        run: node course-browser.mjs
