@@ -5,6 +5,7 @@ HTMLCat is a static, build-free course that teaches HTML + CSS and clean code to
 
 ## Read first, in this order
 
+0. `HANDOFF.md` — where the work stopped and the next task (start here).
 1. `docs/STATE.md` — what exists now, decisions taken, pending work (single source of truth).
 2. `docs/BLUEPRINT.md` — design reference for everything not built yet, and the rationale.
 3. `docs/CURRICULUM.md` — before touching course content.

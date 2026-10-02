@@ -40,6 +40,7 @@ LLICENCIA.md           Explicació de la llicència en català
 .gitignore             node_modules/
 .github/workflows/ci.yml  Executa tots els tests a cada push i PR
 
+HANDOFF.md             Traspàs per a una sessió nova de Claude (en anglès): on som i què toca
 docs/STATE.md          Aquest document
 docs/BLUEPRINT.md      Disseny inicial i lliçons apreses de PyCat i JSCat (en anglès)
 docs/CURRICULUM.md     Pla de capítols i reptes (proposta)
