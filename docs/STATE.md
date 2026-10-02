@@ -126,10 +126,11 @@ cada pull request (pestanya «Actions» de GitHub).
 
 ## 5. Publicació
 
-**Pendent de configurar** (ho ha de fer el propietari a Cloudflare):
-branca de producció `main`, *framework preset* «None», ordre de compilació
-buida, carpeta de sortida `site`, domini `htmlcat.step-quiz.net` (pendent de D8).
-Després, cal comprovar que `/tests/` i `/docs/` donen la pàgina 404.
+Cloudflare Pages està connectat al repositori (projecte `htmlcat`, adreça
+`htmlcat.pages.dev`): publica `main` i fa una previsualització de cada PR.
+Configuració esperada: *framework preset* «None», ordre de compilació buida,
+carpeta de sortida `site`. Pendent: comprovar que `/tests/` i `/docs/` donen la
+pàgina 404 i afegir el domini `htmlcat.step-quiz.net` (D8).
 
 `site/_headers` afegeix `X-Content-Type-Options`, `Referrer-Policy` i
 `Permissions-Policy`. **No** s'hi han de posar COOP/COEP (BLUEPRINT §3.2, A15)
@@ -142,8 +143,8 @@ ni capçaleres de memòria cau llarga.
 Fases del BLUEPRINT §9.1:
 
 - [ ] **Fase 0 — Arrencada.** Fet: documentació, llicència, `site/` provisional,
-      tests i GitHub Action. Falta: configurar Cloudflare Pages i comprovar que
-      `/tests/` i `/docs/` no es publiquen.
+      tests, GitHub Action i Cloudflare Pages (publica cada PR). Falta: comprovar
+      que `/tests/` i `/docs/` donen 404 i el domini `htmlcat.step-quiz.net`.
 - [ ] Respondre les decisions pendents D1–D12 (§3).
 - [ ] **Fase 1 — Nucli del llenguatge:** tokenitzador d'HTML, analitzador de CSS, arbre del codi font, ressaltat.
 - [ ] **Fase 2 — Editor, previsualització i editor lliure.**

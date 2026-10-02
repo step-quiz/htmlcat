@@ -26,6 +26,19 @@
   --space-5: 2.5rem;
   --radius: 8px;
   --measure: 70ch;
+
+  /* Ressaltat de sintaxi (contrast AA sobre --color-surface) */
+  --hl-tag: #9d174d;
+  --hl-attr: #92400e;
+  --hl-val: #166534;
+  --hl-comment: #52525b;
+  --hl-doctype: #6d28d9;
+  --hl-entity: #0e7490;
+  --hl-selector: #1d4ed8;
+  --hl-at-rule: #6d28d9;
+  --hl-property: #92400e;
+  --hl-css-value: #166534;
+  --hl-important: #b91c1c;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -37,6 +50,18 @@
     --color-muted: #a1a1aa;
     --color-accent: #fb923c;
     --color-accent-text: #18181b;
+
+    --hl-tag: #f472b6;
+    --hl-attr: #fbbf24;
+    --hl-val: #86efac;
+    --hl-comment: #a1a1aa;
+    --hl-doctype: #c4b5fd;
+    --hl-entity: #67e8f9;
+    --hl-selector: #93c5fd;
+    --hl-at-rule: #c4b5fd;
+    --hl-property: #fbbf24;
+    --hl-css-value: #86efac;
+    --hl-important: #fca5a5;
   }
 }
 
@@ -48,4 +73,16 @@
   --color-muted: #a1a1aa;
   --color-accent: #fb923c;
   --color-accent-text: #18181b;
+
+  --hl-tag: #f472b6;
+  --hl-attr: #fbbf24;
+  --hl-val: #86efac;
+  --hl-comment: #a1a1aa;
+  --hl-doctype: #c4b5fd;
+  --hl-entity: #67e8f9;
+  --hl-selector: #93c5fd;
+  --hl-at-rule: #c4b5fd;
+  --hl-property: #fbbf24;
+  --hl-css-value: #86efac;
+  --hl-important: #fca5a5;
 }

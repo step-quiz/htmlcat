@@ -31,3 +31,10 @@ test('lineColAt calcula línia i columna començant per 1', () => {
   assert.deepEqual(lineColAt(text, 4), { line: 2, col: 2 });
   assert.deepEqual(lineColAt(text, 7), { line: 3, col: 1 });
 });
+
+test('makeLineIndex coincideix amb lineColAt a cada posició', async () => {
+  const { makeLineIndex } = await import('../../site/js/util/text.js');
+  const text = 'ab\n\ncde\nf\n';
+  const at = makeLineIndex(text);
+  for (let i = 0; i <= text.length; i++) assert.deepEqual(at(i), lineColAt(text, i), `posició ${i}`);
+});
