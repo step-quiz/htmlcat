@@ -77,3 +77,58 @@ code {
   border-radius: var(--radius);
   background: var(--color-surface);
 }
+
+/* ── Pàgines a pantalla completa (editor lliure) ── */
+
+.pantalla {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100dvh;
+}
+
+.pantalla__contingut {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.barra {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+}
+
+.barra__titol {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 400;
+}
+
+.logo--petit {
+  font-size: 1.125rem;
+  color: inherit;
+  text-decoration: none;
+}
+
+.logo--petit img {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.peu--compacte {
+  padding: var(--space-1) var(--space-3);
+  font-size: 0.75rem;
+}
+
+.boto {
+  display: inline-block;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius);
+  background: var(--color-accent);
+  color: var(--color-accent-text);
+  font-weight: 700;
+  text-decoration: none;
+}

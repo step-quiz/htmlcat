@@ -26,8 +26,10 @@ aquest document (i el codi).
 
 ## 2. Què hi ha ara
 
-**Fase actual: 0 (arrencada), acabada pel que fa al repositori.** Falta
-configurar Cloudflare Pages (§5). Encara no hi ha cap capítol ni l'editor.
+**Fase actual: 2 (editor i previsualització) acabada.** Hi ha l'editor
+lliure a `/editor/` amb previsualització en directe, sobre els analitzadors
+d'HTML i CSS de la fase 1. Encara no hi ha el revisor de codi (fase 3) ni cap
+capítol (fase 4).
 
 ```
 README.md              Presentació del projecte (per a persones)
@@ -43,24 +45,144 @@ docs/BLUEPRINT.md      Disseny inicial i lliçons apreses de PyCat i JSCat (en a
 docs/CURRICULUM.md     Pla de capítols i reptes (proposta)
 
 site/                  ← l'única carpeta que es publica
-  index.html           Portada provisional «En construcció»
+  index.html           Portada provisional «En construcció»: dos exemples ressaltats
+                       i un botó cap a l'editor lliure
+  editor/index.html    Editor lliure (simulador a pantalla completa, clau code:editor)
   404.html             Pàgina d'error (Cloudflare la fa servir sola)
   _headers             Capçaleres de seguretat per a Cloudflare Pages
   LICENSE.txt          Còpia de LICENSE (el peu hi enllaça)
-  css/tokens.css       Variables de disseny (colors, espais, tipografies) i tema fosc
-  css/base.css         Reinici, tipografia i estructura bàsica (.pagina, .peu, .avis, .logo)
+  recursos/            Paquet d'imatges per als alumnes (ara: gat.svg) + CREDITS.md
   img/logo.svg         Logotip (també és la icona de la pestanya)
-  js/util/text.js      Mòdul pur: normalizeNewlines, dedent, lineColAt
+  css/tokens.css       Variables de disseny (colors, espais, tipografies, ressaltat) i tema fosc
+  css/base.css         Reinici, tipografia i estructura (.pagina, .pantalla, .barra, .peu, .avis, .logo, .boto)
+  css/highlight.css    Colors del ressaltat (.hl-*) i blocs pre.code-example
+  css/simulador.css    Simulador i editor (classes sim-*)
+  js/util/text.js            Mòdul pur: normalizeNewlines, dedent, lineColAt, makeLineIndex
+  js/util/storage.js         localStorage amb prefix htmlcat:v1: i sense errors (§2.5)
+  js/i18n/ca.js              Tots els textos de la interfície: t(clau, paràmetres)
+  js/lang/html-spec.js       Dades de l'HTML (elements buits, coneguts, obsolets…)
+  js/lang/html-tokenizer.js  Mòdul pur: tokenitzador d'HTML amb posicions (§2.1)
+  js/lang/html-model.js      Mòdul pur: arbre del codi font i errors d'estructura (§2.1)
+  js/lang/css-parser.js      Mòdul pur: analitzador de CSS tolerant (§2.2)
+  js/editor/highlight.js     Mòdul pur: ressaltat d'HTML i CSS (§2.3)
+  js/editor/editing.js       Mòdul pur: què fan Retorn, Tab i Maj+Tab
+  js/editor/editor.js        Editor: textarea sobre un <pre> ressaltat, números de línia, marques
+  js/preview/srcdoc.js       Mòdul pur: document de la previsualització (§2.4)
+  js/preview/preview.js      Iframe de previsualització protegit (§2.4)
+  js/sim/simulador.js        Component simulador: pestanyes, editors, resultat, desar (§2.4)
+  js/pages/landing-page.js   Punt d'entrada de la portada (ressalta els exemples)
+  js/pages/editor-page.js    Punt d'entrada de l'editor lliure
 
 tests/
   package.json         Només Playwright (versió fixada), per als tests
   package-lock.json
   unit/*.test.mjs      Tests unitaris dels mòduls purs (node:test)
   course-static.mjs    Comprovacions estàtiques de site/ (sense dependències)
-  course-browser.mjs   Comprovacions amb Chromium a 360 i 1280 px
+  course-browser.mjs   Comprovacions amb Chromium a 360 i 1280 px + editor de punta a punta
 ```
 
 Estructura completa prevista: BLUEPRINT §4.1.
+
+### 2.1 HTML: `tokenizeHtml(src)` i `buildSourceTree(src)`
+
+- Els tokens cobreixen tot el codi, sense forats: `doctype`, `comment`,
+  `startTag` (amb `attrs`), `endTag`, `text` (`raw: true` dins de `<style>`,
+  `<script>`, `<title>` i `<textarea>`). Cada token té `start`, `end`
+  (exclusiu, en unitats UTF-16 com `textarea.selectionStart`), `line` i `col`
+  (començant per 1). Detall a la capçalera de `html-tokenizer.js`.
+- `buildSourceTree` retorna l'arbre que l'alumne ha escrit (no el que construeix
+  el navegador) i la llista de problemes `{ code, start, end, line, col, data }`:
+
+| `code` | Exemple | `data` |
+|---|---|---|
+| `unclosed-element` | `<p>Hola` sense `</p>`; `<li>` abans d'un altre `<li>` | `tag` |
+| `stray-end-tag` | `</span>` sense cap `<span>` obert | `tag` |
+| `mismatched-end-tag` | `<h1>Hola</h2>`, o a la mateixa línia `<em>…</strong>` | `open`, `close` |
+| `misnested` | `<b><i>…</b></i>` | `outer`, `inner` |
+| `void-end-tag` | `</br>`, `</img>` | `tag` |
+| `p-closed-by-block` | `<p>…<ul>` (el navegador tanca el `<p>`) | `tag` |
+| `duplicate-attribute` | `<p class="a" class="b">` | `tag`, `attr` |
+| `unclosed-comment` | `<!--` sense `-->` | — |
+| `unterminated-tag` | `<p class="a"` sense `>` | `tag` |
+| `unterminated-attribute-value` | `<img src="gat.png>` | `attr` |
+
+### 2.2 CSS: `parseCss(src)`
+
+Retorna `{ rules, comments, problems, segments }` (format a la capçalera de
+`css-parser.js`). Si falta la `}` d'una regla i en comença una altra, tanca la
+primera i continua (millor diagnòstic que el navegador). Codis de problema:
+`unclosed-block`, `unexpected-close-brace`, `missing-open-brace`, `missing-colon`,
+`empty-value`, `missing-semicolon` (entre dues declaracions), `unclosed-comment`,
+`unclosed-string`. Una última declaració sense `;` és vàlida: es marca amb
+`semicolon: false` perquè el revisor de codi (fase 3) ho pugui avisar.
+
+### 2.3 Ressaltat: `highlightLines(src, lang)` / `highlight(src, lang)`
+
+Fa servir els mateixos analitzadors (el que es pinta i el que es revisa
+coincideixen); el CSS de dins de `<style>` també es ressalta. Escapa tot el
+text, retorna una cadena per línia i cap `<span>` no travessa un salt de línia.
+Classes `hl-*`; colors a `highlight.css` i `tokens.css` (contrast mínim 4,87:1
+en tema clar i 5,62:1 en fosc). Rendiment mesurat amb 300 línies: HTML ≈ 4,6 ms
+i CSS ≈ 3,3 ms (anàlisi + ressaltat).
+
+### 2.4 Simulador, editor i previsualització
+
+**Marcatge** (llegit per `readDefinition` de `sim/simulador.js`):
+
+```html
+<div class="simulador" data-id="c03-llista" data-mode="fragment">
+  <script type="text/plain" data-file="index.html">
+    <ul>
+      <li>Pomes</li>
+    </ul>
+  </script>
+  <script type="text/plain" data-file="estils.css" data-readonly>
+    li { color: teal; }
+  </script>
+</div>
+```
+
+| Atribut | Efecte |
+|---|---|
+| `data-id` | Clau per desar el codi (`code:<data-id>`). Obligatori si és editable; estable per sempre |
+| `data-mode` | `fragment` (per defecte: l'alumne escriu el contingut del `<body>`) o `document` (document sencer) |
+| `data-readonly` | Al simulador: exemple no editable. A un bloc `data-file`: només aquell fitxer |
+| `data-forms` | Permet enviar formularis (es mostren les dades, no s'envien) |
+
+Encara no implementats (fases 3–4): `data-goal-id`, `data-checks`, `data-height`,
+`data-panel`, panell ⚠ Problemes, pantalla completa i autocompletat.
+
+**Previsualització** (`preview/preview.js` + `preview/srcdoc.js`): dues
+proteccions independents, que el test de navegador comprova per separat:
+
+1. `<iframe sandbox="allow-same-origin">` (+ `allow-forms` amb `data-forms`):
+   el codi de l'alumne no pot executar res i el curs pot llegir-ne el DOM i
+   els estils. **Mai `allow-scripts`.**
+2. Una CSP injectada al principi del `<head>`:
+   `default-src 'none'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; media-src 'self'`
+   (bloqueja scripts i qualsevol petició externa: decisió D5).
+
+També s'hi injecta `<base href=".../recursos/">`: `<img src="gat.svg">`
+funciona igual a l'editor lliure i als capítols. En mode `document`, cada
+`<link rel="stylesheet" href="estils.css">` que apunta a un fitxer virtual es
+substitueix pel seu CSS; si el fitxer no existeix, el simulador ho avisa. Els
+clics als enllaços i els enviaments de formularis s'intercepten: la
+previsualització no navega mai enlloc.
+
+**Editor** (`editor/editor.js`): Retorn manté la indentació i n'afegeix un
+nivell després d'una etiqueta d'obertura o d'una `{`; Tab i Maj+Tab indenten i
+desindenten (2 espais, també blocs de línies); Esc i després Tab surt de
+l'editor; tot es pot desfer amb Ctrl+Z (`editText`). Lletra de 16 px perquè
+Safari de l'iPhone no faci zoom.
+
+### 2.5 Dades desades (`localStorage`)
+
+| Clau | Contingut |
+|---|---|
+| `htmlcat:v1:code:<data-id>` | `{ files: { 'index.html': …, 'estils.css': … }, savedAt }` |
+| `htmlcat:v1:code:editor` | El mateix, per a l'editor lliure |
+
+Si el navegador no deixa desar, el simulador ho avisa una vegada.
 
 ---
 
@@ -78,6 +200,11 @@ motiu; si se'n canvia alguna, s'anota aquí amb la data i el motiu.
 | 2026-10-02 | Codi inicial dels exercicis en blocs `<script type="text/plain">` | Conserven el codi exactament; `<template>` i els atributs no ho fan |
 | 2026-10-02 | Llicència: contingut CC BY-NC-SA 4.0, codi MIT (igual que PyCat) | Coherència amb la sèrie |
 | 2026-10-02 | Sense *service worker* ni capçaleres COOP/COEP | Lliçons de PyCat (BLUEPRINT §3.2, A14 i A15) |
+| 2026-10-02 | D1: editor lliure a `/editor/`; la portada `/` serà la del curs | Opció recomanada; el propietari va dir «endavant» |
+| 2026-10-02 | D2: el fitxer CSS dels exercicis es diu `estils.css` | Ídem |
+| 2026-10-02 | D5: la previsualització bloqueja imatges i fonts externes (CSP); imatges a `site/recursos/` | Privacitat dels alumnes i tests deterministes |
+| 2026-10-02 | `buildSrcdoc` retorna `{ html, missingFiles }` (el BLUEPRINT deia només el text) | Per poder avisar d'un `<link>` a un fitxer que no existeix |
+| 2026-10-02 | Sense autocompletat de moment | Ha de ser progressiu (només el que ja s'ha ensenyat) i depèn del vocabulari del curs (fase 4) |
 
 ### Decisions pendents de confirmar amb el propietari
 
@@ -85,11 +212,8 @@ Detall a BLUEPRINT §11. Entre parèntesis, l'opció recomanada.
 
 | Id | Pregunta | Recomanació |
 |---|---|---|
-| D1 | Què mostra la pàgina d'inici `/`? | Portada amb targetes i progrés; editor lliure a `/editor/` |
-| D2 | Nom del fitxer CSS dels exercicis | `estils.css` |
 | D3 | Quan passen els exercicis de fragment a document complet? | Cap. 1 ensenya l'esquelet; caps. 2–5 fragments; des del cap. 6, documents complets |
 | D4 | L'editor tanca les etiquetes sol? | No (cal aprendre a tancar-les); correcció ràpida des del cap. 4 |
-| D5 | Imatges i fonts externes a les pàgines dels alumnes? | Bloquejades; paquet d'imatges propi |
 | D6 | Tema de colors | Clar per defecte; fosc segons el sistema i amb botó |
 | D7 | Tipografies | Space Mono per al codi i una sense serifa per al text, servides des del mateix web |
 | D8 | Domini | `htmlcat.step-quiz.net` |
@@ -115,9 +239,9 @@ cd tests && npm ci && node course-browser.mjs   # navegador (Playwright + Chromi
 
 | Test | Què comprova |
 |---|---|
-| `unit/` | Cada mòdul pur de `site/js/` (ara: `util/text.js`) |
+| `unit/` | Cada mòdul pur de `site/js/` (93 tests): tokenitzador, arbre i errors d'estructura, analitzador de CSS, ressaltat (conserva el codi, escapa, una línia per entrada, rendiment), robustesa amb 500 codis aleatoris, edició (Retorn, Tab, Maj+Tab), `localStorage`, document de previsualització i textos de la interfície |
 | `course-static.mjs` | Cada pàgina té `<!DOCTYPE html>`, `lang="ca"`, `charset` i `<title>`; cap `style=""` ni `on…=""`; cap tabulació; tots els enllaços relatius existeixen; sintaxi de cada `.js`; cap menció de CC BY-NC-ND |
-| `course-browser.mjs` | Cada pàgina, a 360 i 1280 px: cap error a la consola, cap petició fallida, cap petició a servidors externs, cap desplaçament horitzontal |
+| `course-browser.mjs` | Cada pàgina, a 360 i 1280 px: cap error a la consola, cap petició fallida, cap petició a servidors externs, cap desplaçament horitzontal. A més, prova l'editor lliure de punta a punta: escriure, indentació automàtica, resultat en directe, Ctrl+Z, `sandbox` i CSP correctes, cap script ni imatge externa, enllaços interceptats, CSS aplicat i codi desat després de recarregar |
 
 La GitHub Action `.github/workflows/ci.yml` executa els tres a cada push i a
 cada pull request (pestanya «Actions» de GitHub).
@@ -145,9 +269,9 @@ Fases del BLUEPRINT §9.1:
 - [ ] **Fase 0 — Arrencada.** Fet: documentació, llicència, `site/` provisional,
       tests, GitHub Action i Cloudflare Pages (publica cada PR). Falta: comprovar
       que `/tests/` i `/docs/` donen 404 i el domini `htmlcat.step-quiz.net`.
-- [ ] Respondre les decisions pendents D1–D12 (§3).
-- [ ] **Fase 1 — Nucli del llenguatge:** tokenitzador d'HTML, analitzador de CSS, arbre del codi font, ressaltat.
-- [ ] **Fase 2 — Editor, previsualització i editor lliure.**
+- [ ] Respondre les decisions pendents (§3): D3, D4, D6–D12.
+- [x] **Fase 1 — Nucli del llenguatge:** tokenitzador d'HTML, analitzador de CSS, arbre del codi font, ressaltat.
+- [x] **Fase 2 — Editor, previsualització i editor lliure.**
 - [ ] **Fase 3 — Revisor de codi v1 i panell ⚠ Problemes.**
 - [ ] **Fase 4 — Primer capítol complet** (esquelet del curs, progrés, comprovacions, tests).
 - [ ] **Fase 5 — Continguts:** un capítol per PR.
