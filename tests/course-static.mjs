@@ -44,7 +44,11 @@ function listFiles(dir) {
 // Etiquetes d'obertura amb els seus atributs (només per als fitxers del
 // projecte, que controlem; no és un analitzador d'HTML general).
 function startTags(html) {
-  const withoutComments = html.replace(/<!--[\s\S]*?-->/g, '');
+  // Els blocs <script type="text/plain"> són codi de l'alumne (es revisaran
+  // a part, fase 4): les seves etiquetes no són de la pàgina
+  const withoutComments = html
+    .replace(/<script type="text\/plain"[^>]*>[\s\S]*?<\/script>/g, '')
+    .replace(/<!--[\s\S]*?-->/g, '');
   const tags = [];
   for (const match of withoutComments.matchAll(/<([a-zA-Z][\w-]*)(\s[^<>]*?)?\/?>/g)) {
     const attrs = {};
