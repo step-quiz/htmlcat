@@ -1,6 +1,6 @@
 # HTMLCat — Pla del curs
 
-> **Estat:** proposta pendent de confirmar (decisió D9 de [`STATE.md`](STATE.md)).
+> **Estat:** confirmat pel propietari el 2026-10-03 (decisió D9 de [`STATE.md`](STATE.md)).
 > Aquest document és la font de veritat del contingut: s'actualitza en el mateix
 > PR que afegeix o canvia un capítol o un repte.
 >
@@ -14,25 +14,25 @@
 
 | # | Títol | Conceptes nous | Hàbit de codi net | Estat |
 |---|---|---|---|---|
-| 1 | Hola, HTML! | Elements, etiquetes, contingut, niuament; esquelet (`<!DOCTYPE html>`, `html lang`, `head`, `meta charset`, `title`, `body`); `h1`, `p` | Tanca el que obres; la indentació reflecteix el niuament | ⏳ |
-| 2 | Text amb significat | `h1`–`h6`, `strong`/`em`, `br`, comentaris, espais en blanc, entitats (`&lt;`, `&amp;`) | El significat abans que l'aspecte | ⏳ |
-| 3 | Llistes | `ul`, `ol`, `li`, llistes niades | Niuament = indentació | ⏳ |
-| 4 | Enllaços | `a href`, rutes absolutes i relatives, àncores `#id`, `id` | Textos d'enllaç que diuen on porten | ⏳ |
-| 5 | Imatges | `img src alt width height`, carpetes, `figure`/`figcaption` | Descriu les imatges per a tothom | ⏳ |
-| 6 | Estructura de la pàgina | `header`, `nav`, `main`, `section`, `article`, `aside`, `footer`, `div` | L'estructura, abans de l'estil | ⏳ |
-| 7 | Taules | `table`, `caption`, `thead`, `tbody`, `tr`, `th scope`, `td` | Taules per a dades, no per maquetar | ⏳ |
-| 8 | Formularis | `form`, `label for`, tipus d'`input`, `select`, `textarea`, `button` | Cada camp té la seva etiqueta | ⏳ |
+| 1 | Hola, HTML! | Elements, etiquetes, contingut, niuament; esquelet (`<!DOCTYPE html>`, `html lang`, `head`, `meta charset`, `title`, `body`); `h1`, `p` | Tanca el que obres; la indentació reflecteix el niuament | ✅ `cap-1-ex`, `cap-1-bug` |
+| 2 | Text amb significat | `h1`–`h6`, `strong`/`em`, `br`, comentaris, espais en blanc, entitats (`&lt;`, `&amp;`) | El significat abans que l'aspecte | ✅ `cap-2-ex`, `cap-2-bug` |
+| 3 | Llistes | `ul`, `ol`, `li`, llistes niades | Niuament = indentació | ✅ `cap-3-ex`, `cap-3-bug` |
+| 4 | Enllaços | `a href`, rutes absolutes i relatives, àncores `#id`, `id` | Textos d'enllaç que diuen on porten | ✅ `cap-4-ex`, `cap-4-bug` |
+| 5 | Imatges | `img src alt width height`, carpetes, `figure`/`figcaption` | Descriu les imatges per a tothom | ✅ `cap-5-ex`, `cap-5-bug` |
+| 6 | Estructura de la pàgina | `header`, `nav`, `main`, `section`, `article`, `aside`, `footer`, `div` | L'estructura, abans de l'estil | ✅ `cap-6-ex`, `cap-6-bug` |
+| 7 | Taules | `table`, `caption`, `thead`, `tbody`, `tr`, `th scope`, `td` | Taules per a dades, no per maquetar | ✅ `cap-7-ex`, `cap-7-bug` |
+| 8 | Formularis | `form`, `label for`, tipus d'`input`, `select`, `textarea`, `button` | Cada camp té la seva etiqueta | ✅ `cap-8-ex`, `cap-8-bug` |
 
 ### Part B — CSS
 
 | # | Títol | Conceptes nous | Hàbit de codi net | Estat |
 |---|---|---|---|---|
-| 9 | Hola, CSS! | Sintaxi de les regles, `link rel="stylesheet"`, `color`, `background-color`, `font-size`, comentaris | Separa el contingut de la presentació | ⏳ |
-| 10 | Selectors i cascada | Selectors d'element, de classe, d'id, descendents, agrupats; cascada, especificitat, herència | Noms de classe pel significat (`.avis`, no `.vermell`) | ⏳ |
-| 11 | Colors, text i unitats | hex/rgb/hsl, `px`/`em`/`rem`/`%`, famílies de lletra, `line-height`, `text-align`, variables CSS | No et repeteixis: variables | ⏳ |
-| 12 | El model de caixa | `margin`, `border`, `padding`, `width`, `box-sizing`, `display` | Una escala d'espais coherent | ⏳ |
-| 13 | Flexbox | `display: flex`, `flex-direction`, `justify-content`, `align-items`, `gap`, `flex-wrap` | Maqueta amb intenció, no amb trucs | ⏳ |
-| 14 | Pàgines que s'adapten | `meta viewport`, `max-width`, imatges flexibles, `@media` | Primer el mòbil | ⏳ |
+| 9 | Hola, CSS! | Sintaxi de les regles, `link rel="stylesheet"`, `color`, `background-color`, `font-size`, comentaris | Separa el contingut de la presentació | ✅ `cap-9-ex`, `cap-9-bug` |
+| 10 | Selectors i cascada | Selectors d'element, de classe, d'id, descendents, agrupats; cascada, especificitat, herència | Noms de classe pel significat (`.avis`, no `.vermell`) | ✅ `cap-10-ex`, `cap-10-bug` |
+| 11 | Colors, text i unitats | hex/rgb/hsl, `px`/`em`/`rem`/`%`, famílies de lletra, `line-height`, `text-align`, `font-weight`, `font-style`, variables CSS, contrast | No et repeteixis: variables | ✅ `cap-11-ex`, `cap-11-bug` |
+| 12 | El model de caixa | `margin`, `border`, `border-radius`, `padding`, `width`, `box-sizing`, centrar amb `margin: 0 auto`, `display` (`block`, `inline`, `inline-block`, `none`) | Una escala d'espais coherent | ✅ `cap-12-ex`, `cap-12-bug` |
+| 13 | Flexbox | `display: flex`, `flex-direction`, `justify-content`, `align-items`, `gap`, `flex-wrap`, `flex: 1` | Maqueta amb intenció, no amb trucs | ✅ `cap-13-ex`, `cap-13-bug` |
+| 14 | Pàgines que s'adapten | `meta viewport`, `max-width`, imatges flexibles, `@media` (`min-width`, `max-width`) | Primer el mòbil | ✅ `cap-14-ex`, `cap-14-bug` |
 | 15 | Projecte final | Una pàgina personal o d'un club amb diverses seccions | Tot junt | ⏳ |
 
 Extres opcionals: CSS Grid, transicions, capítol pont cap a la part B de JSCat.

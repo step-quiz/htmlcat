@@ -15,7 +15,7 @@
 <body>
   <div class="pantalla">
     <header class="barra">
-      <a class="logo logo--petit" href="../">
+      <a class="logo logo--petit" href="../../index.html">
         <img src="../img/logo.svg" alt="">
         HTMLCat
       </a>
@@ -23,19 +23,22 @@
     </header>
 
     <main class="pantalla__contingut">
-      <div class="simulador sim--pantalla" data-id="editor" data-mode="document">
+      <div class="simulador sim--pantalla" data-id="editor" data-mode="document" data-forms>
         <script type="text/plain" data-file="index.html">
           <!DOCTYPE html>
           <html lang="ca">
             <head>
               <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1">
               <title>La meva pàgina</title>
               <link rel="stylesheet" href="estils.css">
             </head>
             <body>
-              <h1>Hola, món!</h1>
-              <p>Canvia aquest text i mira el resultat.</p>
-              <img src="gat.svg" alt="Un gat taronja" width="120">
+              <main>
+                <h1>Hola, món!</h1>
+                <p>Canvia aquest text i mira el resultat.</p>
+                <img src="gat.svg" alt="Un gat taronja" width="120" height="120">
+              </main>
             </body>
           </html>
         </script>

@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Capítol 13 — Flexbox | HTMLCat</title>
+  <link rel="icon" href="../img/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/tokens.css">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/course.css">
+  <link rel="stylesheet" href="../css/highlight.css">
+  <link rel="stylesheet" href="../css/simulador.css">
+  <script type="module" src="../js/pages/course-page.js"></script>
+</head>
+<body data-pagina="capitol" data-num="13">
+
+<main class="curs-content">
+  <header class="chapter-header">
+    <h1>Flexbox</h1>
+    <p class="chapter-lead">En acabar aquest capítol sabràs col·locar caixes en fila o en columna, repartir l'espai entre elles, centrar-les i fer que baixin de línia quan no hi caben.</p>
+  </header>
+
+  <section class="chapter-section">
+    <h2>Un contenidor flex</h2>
+    <p>Fins ara, les caixes de bloc s'apilaven una sota l'altra. Amb <code>display: flex</code>, un element col·loca els seus fills en una fila:</p>
+    <div class="simulador" data-id="c13-contenidor" data-height="480">
+      <script type="text/plain" data-file="index.html">
+        <div class="animals">
+          <p class="targeta">Gats</p>
+          <p class="targeta">Gossos</p>
+          <p class="targeta">Conills</p>
+        </div>
+      </script>
+      <script type="text/plain" data-file="estils.css">
+        .animals {
+          display: flex;
+          gap: 1rem;
+        }
+
+        .targeta {
+          padding: 1rem;
+          background-color: lavender;
+        }
+      </script>
+    </div>
+    <ul>
+      <li>L'element que té <code>display: flex</code> és el <strong>contenidor</strong>. Els seus fills, els <strong>elements flex</strong>, es col·loquen un al costat de l'altre.</li>
+      <li><code>gap</code> és l'espai entre els elements. Va al contenidor, no a cada fill.</li>
+      <li>Aquí, el contenidor és un <code>&lt;div&gt;</code>: quan cal agrupar unes caixes només per col·locar-les, i no tenen cap significat especial, l'element que toca és un <code>div</code>.</li>
+    </ul>
+    <p>Prova d'esborrar <code>display: flex</code>: els paràgrafs tornen a anar un sota l'altre.</p>
+  </section>
+
+  <section class="chapter-section">
+    <h2>La direcció</h2>
+    <div class="simulador" data-id="c13-direccio" data-height="500">
+      <script type="text/plain" data-file="index.html">
+        <nav class="menu">
+          <a href="index.html">Inici</a>
+          <a href="horari.html">Horari</a>
+          <a href="menjador.html">Menjador</a>
+        </nav>
+      </script>
+      <script type="text/plain" data-file="estils.css">
+        .menu {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+
+        .menu a {
+          padding: 0.5rem 1rem;
+          background-color: lavender;
+        }
+      </script>
+    </div>
+    <ul>
+      <li><code>flex-direction: row</code> (el valor per defecte): en una fila, d'esquerra a dreta.</li>
+      <li><code>flex-direction: column</code>: en una columna, de dalt a baix.</li>
+    </ul>
+    <p>
+      La direcció que tries és l'<strong>eix principal</strong>; la perpendicular és l'<strong>eix secundari</strong>.
+      Els enllaços són elements en línia, però dins d'un contenidor flex es comporten com caixes: el farciment és de
+      debò i, en una columna, s'estiren fins a l'amplada del contenidor. Prova de canviar <code>column</code> per
+      <code>row</code>.
+    </p>
+  </section>
+
+  <section class="chapter-section">
+    <h2>Repartir l'espai</h2>
+    <div class="simulador" data-id="c13-repartir" data-height="460">
+      <script type="text/plain" data-file="index.html">
+        <header class="capcalera">
+          <p class="logo">Refugi Mixa</p>
+          <nav>
+            <a href="gats.html">Gats</a>
+            <a href="gossos.html">Gossos</a>
+          </nav>
+        </header>
+      </script>
+      <script type="text/plain" data-file="estils.css">
+        .capcalera {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 0 1rem;
+          background-color: lavender;
+        }
+
+        .logo {
+          font-weight: bold;
+        }
+      </script>
+    </div>
+    <p><code>justify-content</code> reparteix l'espai que sobra a l'eix principal:</p>
+    <ul>
+      <li><code>flex-start</code> (per defecte): tots al començament;</li>
+      <li><code>center</code>: tots al mig;</li>
+      <li><code>flex-end</code>: tots al final;</li>
+      <li><code>space-between</code>: el primer al començament, l'últim al final, i l'espai repartit entre ells;</li>
+      <li><code>space-around</code> i <code>space-evenly</code>: l'espai repartit també als extrems.</li>
+    </ul>
+    <p>Prova de canviar <code>space-between</code> per cadascun dels altres valors.</p>
+  </section>
+
+  <section class="chapter-section">
+    <h2>Alinear a l'altre eix</h2>
+    <div class="simulador" data-id="c13-centrar" data-height="480">
+      <script type="text/plain" data-file="index.html">
+        <section class="portada">
+          <h1>Setmana de la ciència</h1>
+        </section>
+      </script>
+      <script type="text/plain" data-file="estils.css">
+        .portada {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 12rem;
+          background-color: lavender;
+        }
+      </script>
+    </div>
+    <p><code>align-items</code> col·loca els elements a l'eix secundari (en una fila, de dalt a baix):</p>
+    <ul>
+      <li><code>stretch</code> (per defecte): s'estiren fins a omplir el contenidor;</li>
+      <li><code>flex-start</code>, <code>center</code>, <code>flex-end</code>: a dalt, al mig o a baix;</li>
+      <li><code>baseline</code>: alineats per la línia de base del text.</li>
+    </ul>
+    <p>Amb <code>justify-content: center</code> i <code>align-items: center</code>, el títol queda centrat en totes dues direccions. Abans de flexbox, això costava molts trucs.</p>
+  </section>
+
+  <section class="chapter-section">
+    <h2>Quan no hi caben</h2>
+    <div class="simulador" data-id="c13-wrap" data-height="600">
+      <script type="text/plain" data-file="index.html">
+        <div class="galeria">
+          <p class="targeta">Gats</p>
+          <p class="targeta">Gossos</p>
+          <p class="targeta">Conills</p>
+          <p class="targeta">Ocells</p>
+          <p class="targeta">Peixos</p>
+          <p class="targeta">Tortugues</p>
+        </div>
+      </script>
+      <script type="text/plain" data-file="estils.css">
+        .galeria {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 1rem;
+        }
+
+        .targeta {
+          width: 8rem;
+          padding: 1rem;
+          background-color: lavender;
+        }
+      </script>
+    </div>
+    <p>
+      Per defecte (<code>flex-wrap: nowrap</code>), tots els elements es queden a la mateixa fila, encara que s'hagin
+      d'encongir. Amb <code>flex-wrap: wrap</code>, els que no hi caben baixen a la fila següent. Prova de treure
+      <code>flex-wrap: wrap</code>: les targetes s'estrenyen fins que totes caben en una fila.
+    </p>
+  </section>
+
+  <section class="chapter-section">
+    <h2>Créixer per omplir l'espai</h2>
+    <div class="simulador" data-id="c13-creixer" data-height="540">
+      <script type="text/plain" data-file="index.html">
+        <main class="pagina">
+          <article>
+            <h2>Notícies</h2>
+            <p>Dilluns comença la setmana de la ciència.</p>
+          </article>
+          <aside>
+            <h2>Agenda</h2>
+            <p>Dijous: concurs de ponts de paper.</p>
+          </aside>
+        </main>
+      </script>
+      <script type="text/plain" data-file="estils.css">
+        .pagina {
+          display: flex;
+          gap: 1rem;
+        }
+
+        article {
+          flex: 1;
+        }
+
+        aside {
+          width: 10rem;
+          background-color: lavender;
+        }
+      </script>
+    </div>
+    <p>
+      <code>flex: 1</code> va en un fill, no al contenidor: vol dir «creix i ocupa tot l'espai que queda». La columna de
+      l'agenda fa 10rem, i la de les notícies, la resta. Si dos fills tenen <code>flex: 1</code>, es reparteixen l'espai a
+      parts iguals.
+    </p>
+    <aside class="codi-net">
+      <p class="codi-net__titol">🧹 Codi net: maqueta amb intenció, no amb trucs</p>
+      <ul>
+        <li>Per posar caixes en fila o en columna, flexbox. Res de <code>float</code>, taules, espais (<code>&amp;nbsp;</code>) ni <code>&lt;br&gt;</code> per col·locar coses.</li>
+        <li>Les propietats de flexbox (<code>display</code>, <code>justify-content</code>, <code>align-items</code>, <code>gap</code>…) van al contenidor, el pare. Als fills, com a molt <code>flex</code>.</li>
+        <li>L'espai entre els elements, amb <code>gap</code> al contenidor, no amb marges a cada fill.</li>
+        <li>Primer, un HTML amb una bona estructura (capítol 6); després, flexbox col·loca les caixes que ja hi ha.</li>
+      </ul>
+    </aside>
+  </section>
+
+  <section class="chapter-section">
+    <h2>Errors típics</h2>
+    <p>Aquests exemples tenen errors. Mira el resultat i llegeix el panell ⚠ Problemes.</p>
+
+    <h3>Falta display: flex</h3>
+    <div class="simulador" data-readonly data-height="380">
+      <script type="text/plain" data-file="index.html">
+        <div class="animals">
+          <p class="targeta">Gats</p>
+          <p class="targeta">Gossos</p>
+        </div>
+      </script>
+      <script type="text/plain" data-file="estils.css">
+        .animals {
+          justify-content: space-between;
+          gap: 1rem;
+        }
+      </script>
+    </div>
+    <p>Sense <code>display: flex</code>, l'element no és un contenidor flex, i <code>justify-content</code> i <code>gap</code> no fan res.</p>
+
+    <h3>Les propietats al fill</h3>
+    <div class="simulador" data-readonly data-height="420">
+      <script type="text/plain" data-file="index.html">
+        <div class="animals">
+          <p class="targeta">Gats</p>
+          <p class="targeta">Gossos</p>
+        </div>
+      </script>
+      <script type="text/plain" data-file="estils.css">
+        .animals {
+          display: flex;
+        }
+
+        .targeta {
+          justify-content: center;
+        }
+      </script>
+    </div>
+    <p>Per centrar les targetes, <code>justify-content</code> ha d'anar al contenidor (<code>.animals</code>), no a les targetes.</p>
+
+    <h3>display: flexbox</h3>
+    <div class="simulador" data-readonly data-height="340">
+      <script type="text/plain" data-file="index.html">
+        <div class="animals">
+          <p class="targeta">Gats</p>
+          <p class="targeta">Gossos</p>
+        </div>
+      </script>
+      <script type="text/plain" data-file="estils.css">
+        .animals {
+          display: flexbox;
+        }
+      </script>
+    </div>
+    <p>La tècnica es diu flexbox, però el valor és <code>flex</code>.</p>
+
+    <h3>align-items: middle</h3>
+    <div class="simulador" data-readonly data-height="380">
+      <script type="text/plain" data-file="index.html">
+        <section class="portada">
+          <h1>Setmana de la ciència</h1>
+        </section>
+      </script>
+      <script type="text/plain" data-file="estils.css">
+        .portada {
+          display: flex;
+          align-items: middle;
+          height: 10rem;
+        }
+      </script>
+    </div>
+    <p>Al mig, en CSS, és <code>center</code>.</p>
+
+    <h3>flex-direction: vertical</h3>
+    <div class="simulador" data-readonly data-height="380">
+      <script type="text/plain" data-file="index.html">
+        <nav class="menu">
+          <a href="index.html">Inici</a>
+          <a href="horari.html">Horari</a>
+        </nav>
+      </script>
+      <script type="text/plain" data-file="estils.css">
+        .menu {
+          display: flex;
+          flex-direction: vertical;
+        }
+      </script>
+    </div>
+    <p>Les direccions són <code>row</code> (fila) i <code>column</code> (columna).</p>
+
+    <h3>float per fer columnes</h3>
+    <div class="simulador" data-readonly data-height="400">
+      <script type="text/plain" data-file="index.html">
+        <p class="columna">Primera columna</p>
+        <p class="columna">Segona columna</p>
+        <p>Peu de pàgina</p>
+      </script>
+      <script type="text/plain" data-file="estils.css">
+        .columna {
+          float: left;
+          width: 40%;
+        }
+      </script>
+    </div>
+    <p>Les columnes queden una al costat de l'altra, però el peu de pàgina s'hi enfila al costat. <code>float</code> serveix perquè el text envolti una imatge; per fer columnes, flexbox.</p>
+  </section>
+
+  <section class="chapter-section">
+    <h2>Exercici: el refugi d'animals</h2>
+    <p>Col·loca les caixes de la pàgina del refugi amb flexbox:</p>
+    <ul>
+      <li>a la capçalera (<code>header</code>), el títol a l'esquerra i el menú a la dreta, centrats verticalment;</li>
+      <li>els enllaços del menú (<code>nav</code>) en una fila, separats amb <code>gap</code>;</li>
+      <li>les targetes (<code>.targeta</code>) d'una amplada de 12rem, en una fila dins de <code>.targetes</code>, separades amb <code>gap</code>, i que baixin de línia quan no hi caben;</li>
+      <li>cap error ni cap avís al panell ⚠ Problemes.</li>
+    </ul>
+    <p>Quan acabis, prem <strong>✓ Comprova</strong>.</p>
+    <div class="simulador" data-id="c13-exercici" data-goal-id="cap-13-ex" data-mode="document" data-height="600">
+      <script type="text/plain" data-file="index.html">
+        <!DOCTYPE html>
+        <html lang="ca">
+          <head>
+            <meta charset="UTF-8">
+            <title>Refugi Mixa</title>
+            <link rel="stylesheet" href="estils.css">
+          </head>
+          <body>
+            <header>
+              <h1>Refugi Mixa</h1>
+              <nav>
+                <a href="index.html">Inici</a>
+                <a href="adopta.html">Adopta</a>
+                <a href="contacte.html">Contacte</a>
+              </nav>
+            </header>
+            <main>
+              <section>
+                <h2>Busquen casa</h2>
+                <div class="targetes">
+                  <article class="targeta">
+                    <h3>Lluna</h3>
+                    <p>Gata de 2 anys, tranquil·la i molt carinyosa.</p>
+                  </article>
+                  <article class="targeta">
+                    <h3>Pirata</h3>
+                    <p>Gat de 5 anys. Li falta un ull, però no la gana.</p>
+                  </article>
+                  <article class="targeta">
+                    <h3>Bolet</h3>
+                    <p>Gat de 6 mesos que ho vol tocar tot.</p>
+                  </article>
+                </div>
+              </section>
+            </main>
+          </body>
+        </html>
+      </script>
+      <script type="text/plain" data-file="estils.css">
+        /* Estils del refugi */
+
+        body {
+          font-family: Verdana, sans-serif;
+        }
+
+        header {
+          padding: 0 1rem;
+          color: white;
+          background-color: #00695c;
+        }
+
+        nav a {
+          color: white;
+        }
+
+        .targeta {
+          padding: 1rem;
+          border: 2px solid #00695c;
+          border-radius: 8px;
+        }
+      </script>
+      <script type="application/json" data-checks>
+        [
+          { "type": "layout", "selector": "header > *", "kind": "row",
+            "msg": "A la capçalera, el títol i el menú estan un al costat de l'altre." },
+          { "type": "style", "selector": "header", "prop": "justify-content", "equals": "space-between",
+            "msg": "El títol queda a l'esquerra i el menú a la dreta (justify-content: space-between)." },
+          { "type": "style", "selector": "header", "prop": "align-items", "equals": "center",
+            "msg": "El títol i el menú estan centrats verticalment (align-items: center)." },
+          { "type": "style", "selector": "nav", "prop": "display", "equals": "flex",
+            "msg": "El menú (nav) és un contenidor flex." },
+          { "type": "uses-css", "selector": "nav", "prop": "gap",
+            "msg": "Els enllaços del menú estan separats amb gap." },
+          { "type": "uses-css", "selector": ".targeta", "prop": "width",
+            "msg": "Les targetes tenen una amplada (width)." },
+          { "type": "layout", "selector": ".targeta", "kind": "row",
+            "msg": "Les targetes estan en una fila." },
+          { "type": "uses-css", "selector": ".targetes", "prop": "gap",
+            "msg": "Les targetes estan separades amb gap." },
+          { "type": "style", "selector": ".targetes", "prop": "flex-wrap", "equals": "wrap",
+            "msg": "Les targetes baixen de línia quan no hi caben (flex-wrap: wrap)." },
+          { "type": "lint", "maxErrors": 0,
+            "msg": "El panell ⚠ Problemes no mostra cap error." },
+          { "type": "lint", "maxWarnings": 0,
+            "msg": "Tampoc no mostra cap avís (com un gap en un element que no és flex)." }
+        ]
+      </script>
+    </div>
+  </section>
+
+  <section class="chapter-section">
+    <h2>Troba l'error</h2>
+    <p>
+      El peu de la pàgina de l'institut hauria de tenir el nom, l'adreça i els enllaços en una fila, centrats
+      verticalment; l'adreça, en una columna (una línia sota l'altra), i els enllaços, en una fila separats 1rem. Hi ha
+      quatre errors a <code>estils.css</code>. Arregla'ls amb l'ajuda del panell ⚠ Problemes, i quan acabis prem
+      <strong>✓ Comprova</strong>.
+    </p>
+    <div class="simulador" data-id="c13-troba-error" data-goal-id="cap-13-bug" data-mode="document" data-height="600">
+      <script type="text/plain" data-file="index.html">
+        <!DOCTYPE html>
+        <html lang="ca">
+          <head>
+            <meta charset="UTF-8">
+            <title>Institut del Parc</title>
+            <link rel="stylesheet" href="estils.css">
+          </head>
+          <body>
+            <main>
+              <h1>Institut del Parc</h1>
+              <p>Benvinguts a la pàgina de l'institut.</p>
+            </main>
+            <footer>
+              <p class="nom">Institut del Parc</p>
+              <address class="contacte">
+                <span>Carrer Major, 1</span>
+                <span>93 000 00 00</span>
+              </address>
+              <nav class="xarxes">
+                <a href="noticies.html">Notícies</a>
+                <a href="fotos.html">Fotos</a>
+                <a href="contacte.html">Contacte</a>
+              </nav>
+            </footer>
+          </body>
+        </html>
+      </script>
+      <script type="text/plain" data-file="estils.css">
+        /* Estils del peu de pàgina */
+
+        footer {
+          display: flexbox;
+          justify-content: space-between;
+          align-items: middle;
+          padding: 1rem;
+          color: white;
+          background-color: #1d3557;
+        }
+
+        .contacte {
+          display: flex;
+          flex-direction: vertical;
+        }
+
+        .xarxes {
+          gap: 1rem;
+        }
+
+        .xarxes a {
+          color: white;
+        }
+      </script>
+      <script type="application/json" data-checks>
+        [
+          { "type": "style", "selector": "footer", "prop": "display", "equals": "flex",
+            "msg": "El peu és un contenidor flex." },
+          { "type": "layout", "selector": "footer > *", "kind": "row",
+            "msg": "El nom, l'adreça i els enllaços estan en una fila." },
+          { "type": "style", "selector": "footer", "prop": "align-items", "equals": "center",
+            "msg": "Estan centrats verticalment." },
+          { "type": "style", "selector": ".contacte", "prop": "flex-direction", "equals": "column",
+            "msg": "L'adreça està en una columna." },
+          { "type": "style", "selector": ".xarxes", "prop": "display", "equals": "flex",
+            "msg": "Els enllaços són dins d'un contenidor flex." },
+          { "type": "uses-css", "selector": ".xarxes", "prop": "gap",
+            "msg": "Els enllaços estan separats amb gap." },
+          { "type": "lint", "maxErrors": 0,
+            "msg": "El panell ⚠ Problemes no mostra cap error." },
+          { "type": "lint", "maxWarnings": 0,
+            "msg": "Tampoc no mostra cap avís." }
+        ]
+      </script>
+    </div>
+  </section>
+
+  <section class="chapter-section">
+    <h2>Resum</h2>
+    <div class="resum">
+      <ul>
+        <li><code>display: flex</code> al contenidor (el pare) col·loca els seus fills en una fila; <code>flex-direction: column</code>, en una columna.</li>
+        <li><code>justify-content</code> reparteix l'espai a l'eix principal (<code>center</code>, <code>space-between</code>…); <code>align-items</code> col·loca els elements a l'altre eix (<code>center</code>, <code>stretch</code>…).</li>
+        <li><code>gap</code>: l'espai entre els elements. <code>flex-wrap: wrap</code>: baixen de línia quan no hi caben.</li>
+        <li><code>flex: 1</code>, en un fill: creix i ocupa l'espai que queda.</li>
+        <li>Per col·locar caixes, flexbox; res de <code>float</code> ni de trucs.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+</body>
+</html>

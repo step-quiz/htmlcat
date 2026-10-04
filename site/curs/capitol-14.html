@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Capítol 14 — Pàgines que s'adapten | HTMLCat</title>
+  <link rel="icon" href="../img/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/tokens.css">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/course.css">
+  <link rel="stylesheet" href="../css/highlight.css">
+  <link rel="stylesheet" href="../css/simulador.css">
+  <script type="module" src="../js/pages/course-page.js"></script>
+</head>
+<body data-pagina="capitol" data-num="14">
+
+<main class="curs-content">
+  <header class="chapter-header">
+    <h1>Pàgines que s'adapten</h1>
+    <p class="chapter-lead">En acabar aquest capítol sabràs fer pàgines que es veuen bé en un mòbil i en un ordinador: amb amplades flexibles, imatges que no se surten de la pantalla i estils que canvien segons l'amplada.</p>
+  </header>
+
+  <section class="chapter-section">
+    <h2>Una pàgina, moltes pantalles</h2>
+    <p>
+      La mateixa pàgina es pot mirar en un mòbil (uns 360 píxels d'ample), en una tauleta (uns 800) o en un ordinador
+      (1.280 o més). Una pàgina que s'adapta (en anglès, <em>responsive</em>) es veu bé a totes, sense haver de fer zoom
+      ni desplaçar-se de costat.
+    </p>
+    <p>El primer pas és aquesta línia, al <code>&lt;head&gt;</code> de cada pàgina:</p>
+    <pre class="code-example" data-lang="html" tabindex="0">&lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;</pre>
+    <p>
+      Sense aquesta línia, els mòbils fan veure que la pantalla fa uns 980 píxels d'ample i ho encongeixen tot: el text
+      es veu petitíssim. Amb <code>width=device-width</code>, la pàgina fa l'amplada de la pantalla de debò. A
+      l'ordinador no es nota: és cosa dels mòbils.
+    </p>
+  </section>
+
+  <section class="chapter-section">
+    <h2>Amplades flexibles</h2>
+    <div class="simulador" data-id="c14-flexibles" data-height="640">
+      <script type="text/plain" data-file="index.html">
+        <main class="pagina">
+          <h1>El viatge als Pirineus</h1>
+          <img src="paisatges/muntanya.svg" alt="Unes muntanyes nevades sota el sol" width="600" height="400">
+          <p>L'excursió va començar a primera hora, quan encara feia fred.</p>
+        </main>
+      </script>
+      <script type="text/plain" data-file="estils.css">
+        .pagina {
+          max-width: 40rem;
+          margin: 0 auto;
+        }
+
+        img {
+          max-width: 100%;
+          height: auto;
+        }
+      </script>
+    </div>
+    <ul>
+      <li><code>max-width: 40rem</code>: com a molt 40rem, però menys si no hi cap. Amb <code>width: 40rem</code>, en canvi, en un mòbil la pàgina se sortiria per la dreta.</li>
+      <li><code>img { max-width: 100%; height: auto; }</code>: cap imatge no és més ampla que el seu contenidor, i l'alçada s'ajusta perquè no es deformi.</li>
+    </ul>
+    <p>Prova d'esborrar la regla de <code>img</code>: la imatge fa 600 píxels i se surt del requadre del resultat.</p>
+  </section>
+
+  <section class="chapter-section">
+    <h2>Estils segons l'amplada: @media</h2>
+    <div class="simulador" data-id="c14-media" data-height="600">
+      <script type="text/plain" data-file="index.html">
+        <div class="targetes">
+          <p class="targeta">Gats</p>
+          <p class="targeta">Gossos</p>
+          <p class="targeta">Conills</p>
+        </div>
+      </script>
+      <script type="text/plain" data-file="estils.css">
+        .targetes {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+        }
+
+        .targeta {
+          padding: 1rem;
+          background-color: lavender;
+        }
+
+        @media (min-width: 20em) {
+          .targetes {
+            flex-direction: row;
+          }
+        }
+      </script>
+    </div>
+    <p>
+      Les regles de dins de <code>@media (min-width: 20em) { … }</code> només s'apliquen quan la pantalla (aquí, el
+      requadre del resultat) fa com a mínim 20em d'ample (320 píxels). Si és més estreta, les targetes van en columna; si
+      és prou ampla, en fila.
+    </p>
+    <p>Prova de canviar <code>20em</code> per <code>50em</code> (800 píxels): el resultat és més estret, i les targetes tornen a anar en columna.</p>
+    <ul>
+      <li>La condició va entre parèntesis, amb dos punts i una unitat: <code>(min-width: 40em)</code>.</li>
+      <li><code>min-width</code>: «a partir d'aquesta amplada»; <code>max-width</code>: «fins a aquesta amplada».</li>
+      <li>Dins del <code>@media</code>, les regles s'escriuen com sempre, indentades 2 espais més.</li>
+    </ul>
+  </section>
+
+  <section class="chapter-section">
+    <h2>Primer el mòbil</h2>
+    <div class="simulador" data-id="c14-primer-mobil" data-height="540">
+      <script type="text/plain" data-file="index.html">
+        <header class="capcalera">
+          <h1>Refugi Mixa</h1>
+          <nav>
+            <a href="gats.html">Gats</a>
+            <a href="gossos.html">Gossos</a>
+            <a href="adopta.html">Adopta</a>
+          </nav>
+        </header>
+      </script>
+      <script type="text/plain" data-file="estils.css">
+        /* Per a totes les pantalles: el mòbil */
+        .capcalera {
+          text-align: center;
+        }
+
+        nav {
+          display: flex;
+          justify-content: center;
+          gap: 1rem;
+        }
+
+        /* Quan hi ha lloc: el títol i el menú, un a cada costat */
+        @media (min-width: 25em) {
+          .capcalera {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          }
+        }
+      </script>
+    </div>
+    <p>
+      Escriu primer, fora de cap <code>@media</code>, els estils que serveixen per a la pantalla petita: una columna, el
+      més senzill. Després, amb <code>@media (min-width: …)</code>, afegeix-hi el que canvia quan hi ha més lloc. Al mòbil
+      no li cal res més, i el codi de les pantalles grans és poc. Prova de canviar <code>25em</code> per <code>40em</code>.
+    </p>
+    <aside class="codi-net">
+      <p class="codi-net__titol">🧹 Codi net: primer el mòbil</p>
+      <ul>
+        <li>Comença pels estils del mòbil, fora de cap <code>@media</code>, i afegeix-hi els de les pantalles amples amb <code>@media (min-width: …)</code>.</li>
+        <li>Res d'amplades fixes en píxels per a les caixes grans: <code>max-width</code> i percentatges.</li>
+        <li><code>img { max-width: 100%; height: auto; }</code> a tots els fulls d'estil.</li>
+        <li>A cada pàgina, <code>&lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;</code>, i mai <code>user-scalable=no</code>: qui hi veu poc ha de poder fer zoom.</li>
+        <li>Tria on canvia la maqueta pel contingut (quan les caixes ja no hi caben), no per un model de mòbil concret.</li>
+      </ul>
+    </aside>
+  </section>
+
+  <section class="chapter-section">
+    <h2>Errors típics</h2>
+    <p>Aquests exemples tenen errors. Mira el resultat i llegeix el panell ⚠ Problemes.</p>
+
+    <h3>Falta el viewport</h3>
+    <div class="simulador" data-readonly data-mode="document" data-height="400">
+      <script type="text/plain" data-file="index.html">
+        <!DOCTYPE html>
+        <html lang="ca">
+          <head>
+            <meta charset="UTF-8">
+            <title>Refugi Mixa</title>
+          </head>
+          <body>
+            <main>
+              <h1>Refugi Mixa</h1>
+            </main>
+          </body>
+        </html>
+      </script>
+    </div>
+    <p>Aquí es veu bé, però en un mòbil tot sortiria petitíssim.</p>
+
+    <h3>Un @media sense parèntesis</h3>
+    <div class="simulador" data-readonly data-height="400">
+      <script type="text/plain" data-file="index.html">
+        <p class="avis">Demà no hi ha classe.</p>
+      </script>
+      <script type="text/plain" data-file="estils.css">
+        @media min-width: 20em {
+          .avis {
+            color: darkred;
+          }
+        }
+      </script>
+    </div>
+    <p>El navegador no entén la condició i no aplica mai les regles de dins, sense avisar: l'avís no és vermell.</p>
+
+    <h3>Un número sense unitat</h3>
+    <div class="simulador" data-readonly data-height="400">
+      <script type="text/plain" data-file="index.html">
+        <p class="avis">Demà no hi ha classe.</p>
+      </script>
+      <script type="text/plain" data-file="estils.css">
+        @media (min-width: 300) {
+          .avis {
+            color: darkred;
+          }
+        }
+      </script>
+    </div>
+    <p>També aquí: sense unitat (<code>300px</code>), la condició no es compleix mai.</p>
+
+    <h3>Una amplada fixa</h3>
+    <div class="simulador" data-readonly data-height="400">
+      <script type="text/plain" data-file="index.html">
+        <main class="pagina">
+          <h1>El viatge als Pirineus</h1>
+          <p>L'excursió va començar a primera hora, quan encara feia fred i el sol tot just sortia.</p>
+        </main>
+      </script>
+      <script type="text/plain" data-file="estils.css">
+        .pagina {
+          width: 800px;
+          background-color: lavender;
+        }
+      </script>
+    </div>
+    <p>La pàgina fa 800 píxels, i en un requadre més estret se surt per la dreta. Amb <code>max-width: 800px</code> s'adaptaria.</p>
+
+    <h3>Al revés: primer la pantalla gran</h3>
+    <div class="simulador" data-readonly data-height="440">
+      <script type="text/plain" data-file="index.html">
+        <div class="targetes">
+          <p class="targeta">Gats</p>
+          <p class="targeta">Gossos</p>
+        </div>
+      </script>
+      <script type="text/plain" data-file="estils.css">
+        .targetes {
+          display: flex;
+          gap: 1rem;
+        }
+
+        @media (max-width: 20em) {
+          .targetes {
+            flex-direction: column;
+          }
+        }
+      </script>
+    </div>
+    <p>Funciona, però és al revés del que recomanem: el panell ho suggereix. Comença pel mòbil (en columna) i afegeix la fila amb <code>min-width</code>.</p>
+  </section>
+
+  <section class="chapter-section">
+    <h2>Exercici: el viatge, al mòbil</h2>
+    <p>La pàgina del viatge es veu bé a l'ordinador, però no en un mòbil. Fes que s'adapti:</p>
+    <ul>
+      <li>afegeix al <code>&lt;head&gt;</code> el <code>&lt;meta name="viewport"&gt;</code>;</li>
+      <li>canvia l'amplada fixa de <code>.pagina</code> per un <code>max-width</code>;</li>
+      <li>fes que les imatges no se surtin de la pàgina (<code>max-width: 100%</code> i <code>height: auto</code>);</li>
+      <li>primer el mòbil: les etapes (<code>.etapa</code>), en columna, i a partir de 40em, en fila;</li>
+      <li>cap error ni cap avís al panell ⚠ Problemes.</li>
+    </ul>
+    <p>Les comprovacions miren la pàgina amb 360 píxels d'ample (un mòbil) i amb 800. Quan acabis, prem <strong>✓ Comprova</strong>.</p>
+    <div class="simulador" data-id="c14-exercici" data-goal-id="cap-14-ex" data-mode="document" data-height="600">
+      <script type="text/plain" data-file="index.html">
+        <!DOCTYPE html>
+        <html lang="ca">
+          <head>
+            <meta charset="UTF-8">
+            <title>El viatge als Pirineus</title>
+            <link rel="stylesheet" href="estils.css">
+          </head>
+          <body>
+            <main class="pagina">
+              <h1>El viatge als Pirineus</h1>
+              <img src="paisatges/muntanya.svg" alt="Unes muntanyes nevades sota el sol" width="600" height="400">
+              <div class="etapes">
+                <section class="etapa">
+                  <h2>Dia 1</h2>
+                  <p>Pugem del poble al refugi.</p>
+                </section>
+                <section class="etapa">
+                  <h2>Dia 2</h2>
+                  <p>Arribem al cim i veiem els estanys.</p>
+                </section>
+                <section class="etapa">
+                  <h2>Dia 3</h2>
+                  <p>Baixem pel bosc fins al riu.</p>
+                </section>
+              </div>
+            </main>
+          </body>
+        </html>
+      </script>
+      <script type="text/plain" data-file="estils.css">
+        /* Estils del viatge */
+
+        body {
+          font-family: Verdana, sans-serif;
+        }
+
+        .pagina {
+          width: 800px;
+          margin: 0 auto;
+        }
+
+        .etapes {
+          display: flex;
+          gap: 1rem;
+        }
+
+        .etapa {
+          flex: 1;
+          padding: 1rem;
+          background-color: lavender;
+        }
+      </script>
+      <script type="application/json" data-checks>
+        [
+          { "type": "attr", "selector": "meta[name=\"viewport\"]", "name": "content", "includes": "width=device-width",
+            "msg": "Al <head> hi ha <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">." },
+          { "type": "uses-css", "selector": ".pagina", "prop": "max-width",
+            "msg": "La pàgina (.pagina) té un max-width." },
+          { "type": "layout", "selector": ".pagina", "kind": "fits-width", "width": 360,
+            "msg": "En un mòbil, la pàgina no se surt per la dreta." },
+          { "type": "layout", "selector": "img", "kind": "fits-width", "width": 360,
+            "msg": "En un mòbil, la imatge no se surt per la dreta." },
+          { "type": "layout", "selector": ".etapa", "kind": "column", "width": 360,
+            "msg": "En un mòbil, les etapes van en columna." },
+          { "type": "layout", "selector": ".etapa", "kind": "row",
+            "msg": "En una pantalla ampla (800 píxels), les etapes van en fila." },
+          { "type": "lint", "maxErrors": 0,
+            "msg": "El panell ⚠ Problemes no mostra cap error." },
+          { "type": "lint", "maxWarnings": 0,
+            "msg": "Tampoc no mostra cap avís (com una amplada fixa o el viewport que falta)." }
+        ]
+      </script>
+    </div>
+  </section>
+
+  <section class="chapter-section">
+    <h2>Troba l'error</h2>
+    <p>
+      La botiga de l'escola s'hauria de poder ampliar amb els dits, les imatges no s'haurien de sortir de la pantalla
+      d'un mòbil, i a partir de 40em els productes haurien d'anar en fila i els preus haurien de ser més grans. Hi ha
+      quatre errors, entre <code>index.html</code> i <code>estils.css</code>. Arregla'ls amb l'ajuda del panell
+      ⚠ Problemes, i quan acabis prem <strong>✓ Comprova</strong>.
+    </p>
+    <div class="simulador" data-id="c14-troba-error" data-goal-id="cap-14-bug" data-mode="document" data-height="600">
+      <script type="text/plain" data-file="index.html">
+        <!DOCTYPE html>
+        <html lang="ca">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+            <title>Botiga de l'escola</title>
+            <link rel="stylesheet" href="estils.css">
+          </head>
+          <body>
+            <main>
+              <h1>Botiga de l'escola</h1>
+              <div class="productes">
+                <article class="producte">
+                  <h2>Samarreta del gat</h2>
+                  <img src="gat.svg" alt="Un gat taronja que somriu" width="200" height="200">
+                  <p class="preu">12 €</p>
+                </article>
+                <article class="producte">
+                  <h2>Tassa del gos</h2>
+                  <img src="animals/gos.svg" alt="Un gos marró que treu la llengua" width="200" height="200">
+                  <p class="preu">8 €</p>
+                </article>
+              </div>
+            </main>
+          </body>
+        </html>
+      </script>
+      <script type="text/plain" data-file="estils.css">
+        /* Estils de la botiga */
+
+        img {
+          width: 500px;
+        }
+
+        .productes {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+        }
+
+        .producte {
+          padding: 1rem;
+          border: 2px solid teal;
+        }
+
+        @media min-width: 40em {
+          .productes {
+            flex-direction: row;
+          }
+        }
+
+        @media (min-width: 640) {
+          .preu {
+            font-size: 1.5rem;
+          }
+        }
+      </script>
+      <script type="application/json" data-checks>
+        [
+          { "type": "attr", "selector": "meta[name=\"viewport\"]", "name": "content", "matches": "^(?!.*(user-scalable|maximum-scale)).*width=device-width",
+            "msg": "El viewport deixa fer zoom (sense user-scalable=no)." },
+          { "type": "layout", "selector": "img", "kind": "fits-width", "width": 360,
+            "msg": "En un mòbil, les imatges no se surten per la dreta." },
+          { "type": "layout", "selector": ".producte", "kind": "column", "width": 360,
+            "msg": "En un mòbil, els productes van en columna." },
+          { "type": "layout", "selector": ".producte", "kind": "row",
+            "msg": "En una pantalla ampla, els productes van en fila." },
+          { "type": "style", "selector": ".preu", "prop": "font-size", "equals": "1.5rem", "all": true,
+            "msg": "En una pantalla ampla, els preus fan 1.5rem." },
+          { "type": "lint", "maxErrors": 0,
+            "msg": "El panell ⚠ Problemes no mostra cap error." },
+          { "type": "lint", "maxWarnings": 0,
+            "msg": "Tampoc no mostra cap avís." }
+        ]
+      </script>
+    </div>
+  </section>
+
+  <section class="chapter-section">
+    <h2>Resum</h2>
+    <div class="resum">
+      <ul>
+        <li>A cada pàgina, <code>&lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;</code>.</li>
+        <li>Amplades flexibles: <code>max-width</code> i percentatges en lloc d'amplades fixes; <code>img { max-width: 100%; height: auto; }</code>.</li>
+        <li><code>@media (min-width: 40em) { … }</code>: regles que només s'apliquen a partir d'una amplada. La condició, entre parèntesis i amb unitat.</li>
+        <li>Primer el mòbil: els estils de la pantalla petita fora de cap <code>@media</code>, i els de les grans amb <code>min-width</code>.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+</body>
+</html>
