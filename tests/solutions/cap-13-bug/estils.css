@@ -1,0 +1,24 @@
+/* Estils del peu de pàgina */
+
+footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  color: white;
+  background-color: #1d3557;
+}
+
+.contacte {
+  display: flex;
+  flex-direction: column;
+}
+
+.xarxes {
+  display: flex;
+  gap: 1rem;
+}
+
+.xarxes a {
+  color: white;
+}

@@ -1,0 +1,36 @@
+/* Estils del refugi */
+
+body {
+  font-family: Verdana, sans-serif;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem;
+  color: white;
+  background-color: #00695c;
+}
+
+nav {
+  display: flex;
+  gap: 1rem;
+}
+
+nav a {
+  color: white;
+}
+
+.targetes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.targeta {
+  width: 12rem;
+  padding: 1rem;
+  border: 2px solid #00695c;
+  border-radius: 8px;
+}

@@ -1,0 +1,33 @@
+/* Estils del viatge */
+
+body {
+  font-family: Verdana, sans-serif;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+.pagina {
+  max-width: 40rem;
+  margin: 0 auto;
+}
+
+.etapes {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.etapa {
+  flex: 1;
+  padding: 1rem;
+  background-color: lavender;
+}
+
+@media (min-width: 40em) {
+  .etapes {
+    flex-direction: row;
+  }
+}

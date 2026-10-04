@@ -1,0 +1,29 @@
+/* Estils de la botiga */
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+.productes {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.producte {
+  padding: 1rem;
+  border: 2px solid teal;
+}
+
+@media (min-width: 40em) {
+  .productes {
+    flex-direction: row;
+  }
+}
+
+@media (min-width: 640px) {
+  .preu {
+    font-size: 1.5rem;
+  }
+}
