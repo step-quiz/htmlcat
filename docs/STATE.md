@@ -7,7 +7,7 @@
 >
 > **Regla d'or:** un document d'estat obsolet és més perillós que no tenir-ne.
 
-Darrera actualització: 2026-10-03.
+Darrera actualització: 2026-10-05.
 
 ---
 
@@ -71,10 +71,13 @@ site/                  ← l'única carpeta que es publica
   recursos/            Paquet d'imatges per als alumnes (gat.svg, animals/, paisatges/) + CREDITS.md
   img/logo.svg         Logotip (també és la icona de la pestanya)
   img/model-caixa.svg  Figura del capítol 12: contingut, farciment, vora i marge
+  img/family/          Icones dels 4 projectes Cat (htmlcat, pycat, karelcat, jscat; §2.9)
+  fonts/               josefin-sans-600.woff2 (només «EXPLORA») i LICENSE-OFL.txt (llicència de la tipografia)
   css/tokens.css       Variables de disseny (colors, espais, tipografies, ressaltat) i tema fosc
   css/base.css         Reinici, tipografia i estructura (.pagina, .pantalla, .barra, .peu, .avis, .logo, .boto)
   css/highlight.css    Colors del ressaltat (.hl-*) i blocs pre.code-example
   css/simulador.css    Simulador i editor (classes sim-*)
+  css/family.css       Selector de la família Cat de la portada (§2.9) i la tipografia Josefin Sans (@font-face)
   css/course.css       Pàgines del curs: barra, menú de capítols, anterior/següent, .nota, .codi-net, .resum, .galeria (§2.8)
   js/util/text.js            Mòdul pur: normalizeNewlines, dedent, lineColAt, makeLineIndex
   js/util/storage.js         localStorage amb prefix htmlcat:v1: i sense errors (§2.5)
@@ -108,6 +111,7 @@ site/                  ← l'única carpeta que es publica
   js/course/data.js          Mòdul pur: capítols i reptes; ordre del curs (§2.8)
   js/course/progress.js      Exercicis superats, al navegador (§2.5)
   js/course/shell.js         Barra, menú de capítols amb ✓, anterior/següent i peu (§2.8)
+  js/family/family.js        Selector de la família Cat: mountFamily(host) i CAT_PROJECTS (§2.9)
   js/pages/course-page.js    Punt d'entrada dels capítols i reptes (muntatge mandrós)
   js/pages/landing-page.js   Punt d'entrada de la portada (ressalta els exemples)
   js/pages/editor-page.js    Punt d'entrada de l'editor lliure
@@ -448,6 +452,32 @@ els de `base.css` (`.avis`, `.boto`). Cap `style=""`.
 contenen pàgines que existeixen (ho comprova el test estàtic), i la portada hi
 genera la llista de capítols.
 
+### 2.9 Selector de la família Cat (`js/family/family.js`, `css/family.css`)
+
+Text «EXPLORA» i 4 icones petites (HTMLCat, PyCat, KarelCat, JSCat) **només a la
+portada** (`index.html` de l'arrel: `<header class="barra barra--portada">`, que només
+el conté, i `pages/landing-page.js` hi crida `mountFamily`). L'editor lliure i els capítols
+**no** en tenen: és una decisió del propietari (2026-10-05). Per posar-lo en una altra
+pàgina caldria enllaçar `family.css` i cridar `mountFamily(capçalera)`.
+Origen: «Cat family icon selector», fet a JSCat (`FAMILY-ICONS-HANDOFF.md`) i adaptat aquí.
+
+- `mountFamily(host)` afegeix un `<nav class="cat-family">` a `host` (una capçalera amb
+  `position: relative`) i el retorna. `CAT_PROJECTS` (id, nom, url, icona) i
+  `CURRENT_PROJECT = 'htmlcat'`. Per afegir un projecte: una línia a `CAT_PROJECTS` i la
+  seva icona a `img/family/` (un test unitari ho comprova).
+- La icona actual és un `<span aria-current="page">` amb un puntet; les altres són
+  `<a target="_blank" rel="noopener">`. Els textos són a `i18n/ca.js` (`family.*`); les
+  icones es busquen amb `import.meta.url`.
+- Ratolí (o Tab) sobre una icona: creix a 1,9×, fa 1 s de «shake-and-blink» (l'animació va
+  a la `<img>`), les altres 3 passen a 0,8× i `brightness(1.1)`, i «EXPLORA» és substituït
+  pel nom. `deactivate()` espera 80 ms per no parpellejar. Sense `(hover: hover)` (tàctil)
+  no hi ha hover enganxat.
+- Disseny: ≥ 720 px, icones centrades a la capçalera i «EXPLORA» a l'esquerra només des de
+  900 px; < 720 px, a la dreta. Amb `prefers-reduced-motion`: sense transicions ni animació.
+- Tipografia: Josefin Sans 600 (OFL), servida des de `site/fonts/` (D7, privacitat: cap
+  Google Fonts). `htmlcat.svg` és el mateix fitxer que `img/logo.svg` (un test ho comprova).
+- **No verificat:** Safari, Firefox, mòbil real, i el ritme del «shake-and-blink» a ull.
+
 ---
 
 ## 3. Decisions preses
@@ -503,9 +533,10 @@ El propietari va acceptar totes les opcions recomanades (BLUEPRINT §11).
 | D7 | Space Mono per al codi i una sense serifa per al text, servides des del mateix web | Pendent (fase 7); ara, lletres del sistema |
 | D8 | Domini `htmlcat.step-quiz.net` | Pendent de configurar a Cloudflare (§5) |
 | D9 | Currículum: els 15 capítols i 12 reptes de [`CURRICULUM.md`](CURRICULUM.md) | Confirmat |
-| D10 | HTMLCat abans de la part B de JSCat; enllaços en tots dos sentits | Enllaços quan els dos cursos els tinguin |
+| D10 | HTMLCat abans de la part B de JSCat; enllaços en tots dos sentits | HTMLCat ja enllaça els altres tres des de la portada (D13); falta que els altres projectes enllacin HTMLCat |
 | D11 | Identificadors del motor en anglès, comentaris en català | Aplicada |
 | D12 | Classes i ids que s'ensenyen: català en minúscules, sense accents, amb guions (`menu-principal`) | Aplicada |
+| D13 | Selector de la família Cat només a la portada (§2.9), amb la tipografia i les icones servides des del mateix web (cap petició a tercers) | Aplicada (2026-10-05) |
 
 ---
 
@@ -524,9 +555,9 @@ cd tests && npm ci && node course-browser.mjs   # navegador (Playwright + Chromi
 
 | Test | Què comprova |
 |---|---|
-| `unit/` | Cada mòdul pur de `site/js/` (228 tests): tokenitzador, arbre i errors d'estructura, analitzador de CSS, colors del CSS (cada sintaxi i el contrast), ressaltat (conserva el codi, escapa, una línia per entrada, rendiment), robustesa amb 500 codis aleatoris (també el revisor), edició (Retorn, Tab, Maj+Tab), `localStorage`, document de previsualització, textos de la interfície i revisor de codi: per a cada regla, un codi que la dispara i un que no (un test falla si una regla no en té), missatges sense buits, activació per capítol i mode, ordre, agrupació, rendiment, i que el codi d'exemple de l'editor lliure i de la portada no tingui cap problema; dades del curs i progrés; esquema de les comprovacions i les que no necessiten navegador (`uses-html`, `uses-css`, `lint`; `layout`, amb caixes de mentida) |
+| `unit/` | Cada mòdul pur de `site/js/` (233 tests): tokenitzador, arbre i errors d'estructura, analitzador de CSS, colors del CSS (cada sintaxi i el contrast), ressaltat (conserva el codi, escapa, una línia per entrada, rendiment), robustesa amb 500 codis aleatoris (també el revisor), edició (Retorn, Tab, Maj+Tab), `localStorage`, document de previsualització, textos de la interfície i revisor de codi: per a cada regla, un codi que la dispara i un que no (un test falla si una regla no en té), missatges sense buits, activació per capítol i mode, ordre, agrupació, rendiment, i que el codi d'exemple de l'editor lliure i de la portada no tingui cap problema; dades del curs i progrés; dades del selector de la família Cat (4 projectes, adreces, icones, tipografia sense tercers); esquema de les comprovacions i les que no necessiten navegador (`uses-html`, `uses-css`, `lint`; `layout`, amb caixes de mentida) |
 | `course-static.mjs` | Cada pàgina (també la portada, a l'arrel) té `<!DOCTYPE html>`, `lang="ca"`, `charset` i `<title>`; cap `style=""` ni `on…=""`; cap tabulació; tots els enllaços relatius existeixen; sintaxi de cada `.js`; cap menció de CC BY-NC-ND; existeixen `.editorconfig`, `.gitignore` i `.github/workflows/ci.yml` (una pujada pel web no els inclou). Curs: dades (`course/data.js`) ↔ fitxers de `site/curs/`; `<body data-pagina data-num>` d'acord amb el fitxer; l'exercici principal de cada capítol hi és; tot simulador editable té `data-id`; `data-id` i `data-goal-id` únics; blocs de codi amb nom permès i sense `<script`; comprovacions vàlides (`checks/schema.js`); cada exercici té la seva solució a `tests/solutions/`. Imatges: la llista de `preview/recursos.js`, els fitxers de `site/recursos/` i les files de `CREDITS.md` coincideixen |
-| `course-browser.mjs` | Serveix el repositori sencer, com el web publicat. La portada (arrel) i cada pàgina de `site/` (no `404.html`, que el web publicat no fa servir, ni `index.html`, que només porta a la portada: es comprova que hi porta), a 360 i 1280 px: cap error a la consola, cap petició fallida, cap petició a servidors externs, tots els simuladors es munten en arribar-hi, cap desplaçament horitzontal, cap id repetit; a cada simulador, les imatges que el navegador no pot mostrar són tantes com les que el panell ⚠ Problemes diu que no es troben (`html/image-not-found`), i només n'hi pot haver als exemples no editables i als exercicis (les peticions d'aquestes imatges, un 404 a `recursos/` o una imatge d'Internet que bloqueja la CSP, no compten com a errors de la pàgina). Cada exercici dels capítols, en un mòbil: el codi inicial no el supera, la solució sí (i sense errors al panell ⚠ Problemes), el menú hi posa ✓ i es manté després de recarregar. Dos exemples no editables a la mateixa pàgina no repeteixen els ids de les pestanyes. A més, prova l'editor lliure de punta a punta: escriure, indentació automàtica, resultat en directe, Ctrl+Z, `sandbox` i CSP correctes (també amb text abans de `<html>`), cap script ni imatge externa, enllaços interceptats, un formulari amb `action` cap a un altre web que no envia res i mostra les dades a sota, CSS aplicat i codi desat després de recarregar. I el panell ⚠ Problemes: «Cap problema» amb el codi inicial, el `<p>` del codi inicial sense tancar surt amb la seva línia i es marca, el clic i el teclat porten el cursor a la línia (i canvien de pestanya), i una propietat CSS mal escrita es detecta amb el `CSS.supports` del navegador |
+| `course-browser.mjs` | Serveix el repositori sencer, com el web publicat. La portada (arrel) i cada pàgina de `site/` (no `404.html`, que el web publicat no fa servir, ni `index.html`, que només porta a la portada: es comprova que hi porta), a 360 i 1280 px: cap error a la consola, cap petició fallida, cap petició a servidors externs, tots els simuladors es munten en arribar-hi, cap desplaçament horitzontal, cap id repetit; a cada simulador, les imatges que el navegador no pot mostrar són tantes com les que el panell ⚠ Problemes diu que no es troben (`html/image-not-found`), i només n'hi pot haver als exemples no editables i als exercicis (les peticions d'aquestes imatges, un 404 a `recursos/` o una imatge d'Internet que bloqueja la CSP, no compten com a errors de la pàgina). Cada exercici dels capítols, en un mòbil: el codi inicial no el supera, la solució sí (i sense errors al panell ⚠ Problemes), el menú hi posa ✓ i es manté després de recarregar. Dos exemples no editables a la mateixa pàgina no repeteixen els ids de les pestanyes. Selector de la família Cat (`checkFamily`, només a la portada): 4 icones, la d'HTMLCat no és enllaç, les altres tres tenen `https://*.step-quiz.net`, `_blank` i `noopener`, icones carregades, centrat a 1280 px, Josefin Sans carregada, ratolí (creix 1,9×, les altres 0,8×, el text diu PyCat, torna al repòs) i Tab; visible en mòbil; l'editor i els capítols no en tenen. A més, prova l'editor lliure de punta a punta: escriure, indentació automàtica, resultat en directe, Ctrl+Z, `sandbox` i CSP correctes (també amb text abans de `<html>`), cap script ni imatge externa, enllaços interceptats, un formulari amb `action` cap a un altre web que no envia res i mostra les dades a sota, CSS aplicat i codi desat després de recarregar. I el panell ⚠ Problemes: «Cap problema» amb el codi inicial, el `<p>` del codi inicial sense tancar surt amb la seva línia i es marca, el clic i el teclat porten el cursor a la línia (i canvien de pestanya), i una propietat CSS mal escrita es detecta amb el `CSS.supports` del navegador |
 
 La GitHub Action `.github/workflows/ci.yml` executa els tres a cada push i a
 cada pull request (pestanya «Actions» de GitHub).

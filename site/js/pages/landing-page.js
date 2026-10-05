@@ -2,17 +2,21 @@
 // pages/landing-page.js — Punt d'entrada de la portada (l'index.html de
 // l'arrel del repositori)
 //
-// Ressalta els exemples de codi i omple la llista de capítols
-// (<ol data-capitols>) a partir de course/data.js, amb ✓ als que
-// l'alumne ja ha superat.
+// Munta el selector de la família Cat a la barra, ressalta els exemples de
+// codi i omple la llista de capítols (<ol data-capitols>) a partir de
+// course/data.js, amb ✓ als que l'alumne ja ha superat.
 // ════════════════════════════════════════════════════════
 
 import { highlightCodeExamples } from '../editor/code-examples.js';
 import { courseSequence } from '../course/data.js';
 import { completedGoals } from '../course/progress.js';
 import { t } from '../i18n/ca.js';
+import { mountFamily } from '../family/family.js';
 
 highlightCodeExamples();
+
+const bar = document.querySelector('.barra');
+if (bar) mountFamily(bar);
 
 const list = document.querySelector('[data-capitols]');
 if (list) {

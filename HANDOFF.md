@@ -1,6 +1,6 @@
 # HANDOFF — start here (for a Claude session with no prior context)
 
-Last updated: 2026-10-04, after chapter 14 (phase 5, content): parts A (HTML) and B (CSS) are complete; the final project (chapter 15) and the challenges are next.
+Last updated: 2026-10-05 (family icon selector), after chapter 14 (phase 5, content): parts A (HTML) and B (CSS) are complete; the final project (chapter 15) and the challenges are next.
 Keep it short and current: when you finish a phase, rewrite the "Where we are" and
 "Next task" sections.
 
@@ -91,8 +91,9 @@ copied here by a GitHub web upload, which dropped every dot-file (see §6).
   together; BLUEPRINT §5 says "all" rules). Then the 12 challenges (`docs/CURRICULUM.md` §2,
   each with `afterChapter`; `REPTES` in `course/data.js` is still empty, and the course shell
   already supports `repte-N.html` pages: STATE §2.8).
+- Family icon selector (2026-10-05, STATE §2.9, D13): `site/js/family/family.js` + `site/css/family.css` put "EXPLORA" and the 4 Cat icons in the header of the **landing page only** (owner's decision: not in the free editor nor the chapters). Ported from JSCat's `family.js` as an ES module, with Josefin Sans self-hosted in `site/fonts/` (no Google Fonts: privacy of minors).
 - Decisions D3, D4, D6–D12: the owner accepted all recommended options (STATE §3).
-- 228 unit tests + static checks + browser checks (editor, panel and every exercise end-to-end), all green.
+- 233 unit tests + static checks + browser checks (editor, panel and every exercise end-to-end), all green.
 - Still pending from phase 0 (owner's job): confirm Cloudflare Pages deploys
   `step-quiz2/htmlcat2` (it was connected to the old repo); confirm `/tests/` and `/docs/`
   return 404 on the deployed site; add custom domain `htmlcat.step-quiz.net`.

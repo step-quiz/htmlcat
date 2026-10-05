@@ -197,6 +197,7 @@ await checkProblemsPanel();
 await checkSeveralSimulators();
 await checkFreeEditorRestore();
 await checkOldLanding();
+await checkFamily();
 for (const file of listPages(join(SITE, 'curs'))) {
   for (const [, goal] of readFileSync(file, 'utf8').matchAll(/data-goal-id="([^"]+)"/g)) await checkExercise(file, goal);
 }
@@ -364,6 +365,90 @@ async function checkOldLanding() {
   const arrived = await page.waitForURL(origin + '/index.html', { timeout: 5000 }).then(() => true, () => false);
   if (!arrived) problems.push(`site/index.html: no porta a la portada (és a ${page.url()})`);
   await page.close();
+}
+
+// Selector de la família Cat (site/js/family/family.js): quatre icones, la
+// d'HTMLCat no és enllaç, les altres tres s'obren en una pestanya nova; el
+// ratolí fa créixer la icona i encongeix les altres; centrat a la capçalera.
+async function checkFamily() {
+  const pages = [['portada', '/']];
+  for (const [name, path] of pages) {
+    const where = `família Cat (${name})`;
+    const fail = (msg) => problems.push(`${where}: ${msg}`);
+    const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
+    page.on('pageerror', (err) => fail(`excepció: ${err.message}`));
+    // Chromium sense pantalla pot dir que no hi ha «hover»: ho forcem
+    await page.addInitScript(() => {
+      const original = window.matchMedia.bind(window);
+      window.matchMedia = (query) => (query === '(hover: hover)'
+        ? { matches: true, media: query, addEventListener() {}, removeEventListener() {} }
+        : original(query));
+    });
+    await page.goto(origin + path, { waitUntil: 'networkidle' });
+
+    const items = page.locator('.cat-family-item');
+    if (await items.count() !== 4) { fail('no hi ha 4 icones'); await page.close(); continue; }
+    const info = await page.evaluate(() => [...document.querySelectorAll('.cat-family-item')].map((item) => ({
+      tag: item.tagName, current: item.classList.contains('is-current'),
+      href: item.getAttribute('href'), target: item.target, rel: item.rel,
+      label: item.getAttribute('aria-label'), loaded: item.querySelector('img').naturalWidth > 0,
+    })));
+    if (info.filter((i) => i.current).length !== 1 || info.find((i) => i.current).tag !== 'SPAN') fail('la icona actual ha de ser un únic <span>');
+    for (const i of info.filter((x) => !x.current)) {
+      if (i.tag !== 'A' || !/^https:\/\/\w+\.step-quiz\.net$/.test(i.href)) fail(`enllaç incorrecte: ${i.href}`);
+      if (i.target !== '_blank' || !i.rel.includes('noopener')) fail(`${i.href}: ha d'obrir-se en una pestanya nova amb noopener`);
+    }
+    if (info.some((i) => !i.loaded || !i.label)) fail('alguna icona no es carrega o no té aria-label');
+
+    const centre = await page.evaluate(() => {
+      const boxes = [...document.querySelectorAll('.cat-family-item')].map((e) => e.getBoundingClientRect());
+      return (Math.min(...boxes.map((b) => b.left)) + Math.max(...boxes.map((b) => b.right))) / 2 - innerWidth / 2;
+    });
+    if (Math.abs(centre) > 1) fail(`les icones no són centrades (${centre.toFixed(1)} px)`);
+    if (!await page.evaluate(() => document.fonts.ready.then(() => document.fonts.check('600 11px "Josefin Sans"')))) {
+      fail('Josefin Sans no s\'ha carregat des de fonts/');
+    }
+
+    // Ratolí sobre PyCat: creix (1,9), les altres s'encongeixen (0,8), el text diu PyCat
+    await page.locator('a.cat-family-item[href*="pycat"]').hover();
+    await page.waitForTimeout(700);
+    const hovered = await page.evaluate(() => {
+      const scale = (e) => new DOMMatrix(getComputedStyle(e).transform).a;
+      const pycat = document.querySelector('a[href*="pycat"]');
+      return {
+        active: pycat.classList.contains('is-active'), scale: scale(pycat),
+        others: [...document.querySelectorAll('.cat-family-item:not(.is-active)')].map(scale),
+        name: document.querySelector('.cat-name').textContent,
+      };
+    });
+    if (!hovered.active || Math.abs(hovered.scale - 1.9) > 0.05) fail(`la icona activa no creix (escala ${hovered.scale})`);
+    if (hovered.others.length !== 3 || hovered.others.some((s) => Math.abs(s - 0.8) > 0.05)) fail('les altres icones no s\'encongeixen un 20 %');
+    if (hovered.name !== 'PyCat') fail(`el text diu «${hovered.name}»`);
+    await page.mouse.move(5, 400);
+    await page.waitForTimeout(700);
+    if (await page.locator('.cat-family.has-active').count()) fail('en treure el ratolí, tot hauria de tornar al repòs');
+
+    // Teclat: Tab fins a una icona fa el mateix efecte
+    await page.locator('a.cat-family-item[href*="karelcat"]').focus();
+    await page.keyboard.press('Shift+Tab');
+    await page.keyboard.press('Tab');
+    if (!await page.locator('a[href*="karelcat"].is-active').count()) fail('el focus de teclat no activa la icona');
+    await page.close();
+  }
+
+  // Només a la portada: l'editor lliure i els capítols no en tenen
+  for (const path of ['/site/editor/', '/site/curs/capitol-1.html']) {
+    const page = await browser.newPage();
+    await page.goto(origin + path, { waitUntil: 'networkidle' });
+    if (await page.locator('.cat-family').count()) problems.push(`família Cat (${path}): no hi ha de ser, només és a la portada`);
+    await page.close();
+  }
+
+  // Mòbil: la portada les mostra i no desborda
+  const mobile = await browser.newPage({ viewport: { width: 360, height: 740 } });
+  await mobile.goto(origin + '/', { waitUntil: 'networkidle' });
+  if (!await mobile.locator('.cat-family').isVisible()) problems.push('família Cat (portada, mòbil): hauria de ser visible');
+  await mobile.close();
 }
 
 // Dos exemples no editables (sense data-id) a la mateixa pàgina, com
