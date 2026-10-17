@@ -4,7 +4,8 @@ Curs interactiu per aprendre a escriure **HTML i CSS** al navegador, en català,
 i a fer-ho amb **codi net i ben estructurat**. Forma part de la mateixa sèrie que
 [KarelCat](https://karelcat.step-quiz.net) i [PyCat](https://pycat.step-quiz.net).
 
-> **Estat:** en construcció. Ja hi ha el capítol 1 i l'editor lliure; els altres capítols arribaran un a un.
+> **Estat:** en construcció. Ja hi ha els capítols 1 a 14 (HTML i CSS) i l'editor lliure; falten el
+> projecte final i els reptes.
 > L'estat real del projecte és a [`docs/STATE.md`](docs/STATE.md).
 
 ---
@@ -30,16 +31,18 @@ Per això HTMLCat els fa visibles:
 | [`docs/CURRICULUM.md`](docs/CURRICULUM.md) | Pla de capítols i reptes, amb l'estat de cadascun. |
 | [`docs/BLUEPRINT.md`](docs/BLUEPRINT.md) | Document de disseny inicial (en anglès), basat en l'anàlisi de PyCat i JSCat. |
 | [`CLAUDE.md`](CLAUDE.md) | Normes per a les IA que hi treballin (en anglès). |
+| [`HANDOFF.md`](HANDOFF.md) | Traspàs per a una sessió nova (en anglès): on som i què toca. |
 
 ## Provar-ho a l'ordinador
 
 Cal Python 3 (per servir el web) i Node 22 (per als tests). Des de l'arrel del projecte:
 
 ```bash
-cd site && python3 -m http.server 8000
+python3 -m http.server 8000
 ```
 
-i obre <http://localhost:8000>. Els tests s'expliquen a [`docs/STATE.md`](docs/STATE.md) §4.
+i obre <http://localhost:8000> (la portada és l'`index.html` de l'arrel, que carrega els
+fitxers de `site/`). Els tests s'expliquen a [`docs/STATE.md`](docs/STATE.md) §4.
 
 ## Principis
 

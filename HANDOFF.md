@@ -7,12 +7,13 @@ Keep it short and current: when you finish a phase, rewrite the "Where we are" a
 ## 1. What this is
 
 HTMLCat: a static, build-free course (HTML + CSS + clean code) for 15-year-olds,
-in Catalan, deployed by Cloudflare Pages from `main` (output dir `site/`,
-`htmlcat.pages.dev`). Sibling projects: `step-quiz/pycat`, `step-quiz/jscat`.
+in Catalan, deployed by Cloudflare Pages from `main` (the whole repository root is
+published since 2026-10-03; see STATE §5). Sibling projects: `step-quiz/pycat`, `step-quiz/jscat`.
 
-Canonical repository: **`step-quiz2/htmlcat2`** (confirmed by the owner, 2026-10-02).
-The history of phases 0–2 (PRs #1–#4) lives in the old repository; the code was
-copied here by a GitHub web upload, which dropped every dot-file (see §6).
+Canonical repository: **`step-quiz/htmlcat`** (as of 2026-10-17). Before that it was
+`step-quiz2/htmlcat2` (confirmed by the owner on 2026-10-02), and the history of phases 0–2
+(PRs #1–#4) lives in an even older repository. Each move was a GitHub web upload; the first one
+dropped every dot-file (see §6).
 
 ## 2. Read in this order
 
@@ -95,7 +96,7 @@ copied here by a GitHub web upload, which dropped every dot-file (see §6).
 - Decisions D3, D4, D6–D12: the owner accepted all recommended options (STATE §3).
 - 233 unit tests + static checks + browser checks (editor, panel and every exercise end-to-end), all green.
 - Still pending from phase 0 (owner's job): confirm Cloudflare Pages deploys
-  `step-quiz2/htmlcat2` (it was connected to the old repo); confirm `/tests/` and `/docs/`
+  `step-quiz/htmlcat`; confirm `/tests/` and `/docs/`
   return 404 on the deployed site; add custom domain `htmlcat.step-quiz.net`.
 
 ## 4. Next task: phase 5 — content, one chapter per PR

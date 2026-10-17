@@ -16,7 +16,7 @@ Darrera actualització: 2026-10-05.
 **HTMLCat** és un curs interactiu per aprendre **HTML i CSS** i a escriure
 **codi net i ben estructurat**, en català, adreçat a alumnes d'ESO (≈ 15 anys).
 És un web estàtic «vanilla» (sense pas de compilació ni dependències) que es
-publicarà a Cloudflare Pages des d'aquest repositori.
+publica a Cloudflare Pages des d'aquest repositori (`step-quiz/htmlcat`).
 
 El disseny complet és a [`BLUEPRINT.md`](BLUEPRINT.md). Mentre una part no
 estigui construïda, el BLUEPRINT n'és la referència; quan ja existeix, mana
@@ -26,10 +26,10 @@ aquest document (i el codi).
 
 ## 2. Què hi ha ara
 
-**Fase actual: 5 (continguts, un capítol per PR).** Fets: capítols 1 a 10 (tota la part A, HTML, i els dos primers de la part B, CSS). Fase 4 acabada: hi ha el capítol 1
-(«Hola, HTML!») amb l'estructura del curs (menú de capítols, progrés), els
-exercicis amb «✓ Comprova» i el panell ⚠ Problemes, i l'editor lliure a
-`/editor/`. Següent: un capítol per PR (fase 5).
+**Fase actual: 5 (continguts, un capítol per PR).** Fets: capítols 1 a 14 (la part A, HTML,
+i la part B, CSS, senceres), amb l'estructura del curs (menú de capítols, progrés), els
+exercicis amb «✓ Comprova», el panell ⚠ Problemes i l'editor lliure a `site/editor/`.
+Següent: el capítol 15, «Projecte final», i després els reptes (§6).
 
 ```
 README.md              Presentació del projecte (per a persones)
@@ -47,7 +47,7 @@ docs/STATE.md          Aquest document
 docs/BLUEPRINT.md      Disseny inicial i lliçons apreses de PyCat i JSCat (en anglès)
 docs/CURRICULUM.md     Pla de capítols i reptes (proposta)
 
-site/                  ← l'única carpeta que es publica
+site/                  ← el web (es publica tot el repositori: vegeu §5)
   index.html           Adreça antiga de la portada: porta a l'index.html de l'arrel
   curs/capitol-1.html  Capítol 1, «Hola, HTML!» (exercicis cap-1-ex i cap-1-bug)
   curs/capitol-2.html  Capítol 2, «Text amb significat» (exercicis cap-2-ex i cap-2-bug)
@@ -568,9 +568,9 @@ cada pull request (pestanya «Actions» de GitHub).
 
 Cloudflare Pages (projecte `htmlcat`, adreça `htmlcat.pages.dev`) estava
 connectat a l'antic repositori. **Pendent:** comprovar que publica aquest
-(`step-quiz2/htmlcat2`), la branca `main`, i que fa una previsualització de
+(`step-quiz/htmlcat`; abans `step-quiz2/htmlcat2`), la branca `main`, i que fa una previsualització de
 cada PR. Configuració esperada: *framework preset* «None», ordre de compilació
-buida, carpeta de sortida `site`. També pendent: comprovar que `/tests/` i
+buida, carpeta de sortida l'arrel (no `site`: vegeu el paràgraf següent). També pendent: comprovar que `/tests/` i
 `/docs/` donen la pàgina 404 i afegir el domini `htmlcat.step-quiz.net` (D8).
 
 Des del 2026-10-04 (decisió del propietari, §3), l'`index.html` de l'arrel del
@@ -591,7 +591,7 @@ Fases del BLUEPRINT §9.1:
 
 - [ ] **Fase 0 — Arrencada.** Fet: documentació, llicència, `site/` provisional,
       tests i GitHub Action. Falta: comprovar que Cloudflare Pages publica
-      `step-quiz2/htmlcat2` (§5), que `/tests/` i `/docs/` donen 404 i el
+      `step-quiz/htmlcat` (§5), que `/tests/` i `/docs/` donen 404 i el
       domini `htmlcat.step-quiz.net`.
 - [x] Respondre les decisions pendents (§3): acceptades les recomanades (2026-10-03).
 - [x] **Fase 1 — Nucli del llenguatge:** tokenitzador d'HTML, analitzador de CSS, arbre del codi font, ressaltat.
