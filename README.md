@@ -44,6 +44,14 @@ python3 -m http.server 8000
 i obre <http://localhost:8000> (la portada és l'`index.html` de l'arrel, que carrega els
 fitxers de `site/`). Els tests s'expliquen a [`docs/STATE.md`](docs/STATE.md) §4.
 
+## Fitxers comuns
+
+`LICENSE`, `LLICENCIA.md` i les icones de la família (`site/img/family/htmlcat.svg`, `site/img/family/pycat.svg`, `site/img/family/karelcat.svg`, `site/img/family/jscat.svg`) són **fitxers comuns** dels cursos de la família: l'original és al repositori
+[step-quiz-commons](https://github.com/step-quiz/step-quiz-commons), on també hi ha què té de
+diferent aquest web (`comuns.json`). El workflow `.github/workflows/comuns.yml` els posa al dia
+cada dia (o a mà: Actions → «Fitxers comuns» → Run workflow). **No els editis aquí**: el canvi es
+perdria l'endemà. Canvia'ls a step-quiz-commons.
+
 ## Principis
 
 - HTML, CSS i JavaScript «vanilla»: sense *frameworks*, sense pas de compilació, sense dependències.
