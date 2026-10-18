@@ -430,6 +430,38 @@
   </section>
 
   <section class="chapter-section">
+    <h2>Comprova què has après</h2>
+    <div class="parsons" data-goal-id="cap-14-parsons">
+      <p class="parsons-enunciat">🧩 Primer el mòbil: ordena i indenta el CSS. Primer, la regla de les targetes per a totes les pantalles; després, el <code>@media</code> que les posa en fila quan hi ha lloc.</p>
+      <pre class="parsons-codi">.targeta {
+  padding: 1rem;
+}
+@media (min-width: 40em) {
+  .targetes {
+    display: flex;
+  }
+}</pre>
+    </div>
+    <div class="quiz" data-goal-id="cap-14-quiz">
+      <div class="quiz-q" data-correcta="1">
+        <p>Què fa <code>&lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;</code>?</p>
+        <ol class="quiz-opcions"><li>Que el mòbil faci servir l'amplada real de la pantalla</li><li>Que la pàgina no es pugui ampliar</li><li>Que la pàgina carregui més ràpid</li></ol>
+        <p class="quiz-explica">Sense aquesta línia, el mòbil fa veure que la pantalla és més ampla i ho encongeix tot.</p>
+      </div>
+      <div class="quiz-q" data-correcta="2">
+        <p>Què vol dir <code>@media (min-width: 40em)</code>?</p>
+        <ol class="quiz-opcions"><li>Fins a 40em d'amplada</li><li>A partir de 40em d'amplada</li><li>Exactament 40em</li></ol>
+        <p class="quiz-explica"><code>min-width</code>: com a mínim aquesta amplada. Les regles de dins s'apliquen a partir de 40em.</p>
+      </div>
+      <div class="quiz-q" data-correcta="3">
+        <p>Per què <code>max-width</code> i no <code>width</code> per a la caixa de la pàgina?</p>
+        <ol class="quiz-opcions"><li>Perquè <code>width</code> no funciona amb <code>rem</code></li><li>Perquè <code>max-width</code> centra la caixa</li><li>Perquè en una pantalla estreta la caixa s'encongeix i no se surt</li></ol>
+        <p class="quiz-explica"><code>max-width</code> és un límit: la caixa no passa d'aquesta amplada, però pot ser més estreta.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter-section">
     <h2>Resum</h2>
     <div class="resum">
       <ul>

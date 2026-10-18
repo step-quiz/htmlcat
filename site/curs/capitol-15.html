@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Capítol 15 — Projecte final | HTMLCat</title>
+  <link rel="icon" href="../img/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/tokens.css">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/course.css">
+  <link rel="stylesheet" href="../css/highlight.css">
+  <link rel="stylesheet" href="../css/simulador.css">
+  <script type="module" src="../js/pages/course-page.js"></script>
+</head>
+<body data-pagina="capitol" data-num="15">
+
+<main class="curs-content">
+  <header class="chapter-header">
+    <h1>Projecte final</h1>
+    <p class="chapter-lead">En aquest capítol no hi ha res nou: hi ha tot junt. Farem pas a pas la pàgina d'un club, de l'esquema al CSS, i després faràs la del teu club.</p>
+  </header>
+
+  <section class="chapter-section">
+    <h2>El projecte: la pàgina d'un club</h2>
+    <p>
+      Un club d'excursionisme de l'institut vol una pàgina web. Hi ha de dir qui són, quines sortides fan, quan es fan
+      i com s'hi pot apuntar. S'ha de poder llegir bé en un mòbil, perquè és on la miraran.
+    </p>
+    <p>Una pàgina així no es comença escrivint CSS. Es fa per passos, en aquest ordre:</p>
+    <ol>
+      <li><strong>El pla:</strong> quines parts té la pàgina i en quin ordre.</li>
+      <li><strong>L'HTML:</strong> tot el contingut, amb els elements que diuen què és cada cosa. Encara sense estils.</li>
+      <li><strong>El CSS:</strong> primer les variables i la base; després, la maqueta, començant pel mòbil.</li>
+      <li><strong>La revisió:</strong> el panell ⚠ Problemes buit, i provar-la estreta i ampla.</li>
+    </ol>
+  </section>
+
+  <section class="chapter-section">
+    <h2>Pas 1: el pla</h2>
+    <p>Abans d'escriure cap etiqueta, fem un esquema de la pàgina. Cada part de l'esquema serà un element:</p>
+    <pre class="code-example" data-lang="html" tabindex="0">&lt;header&gt;     el nom del club i el menú (&lt;nav&gt;)
+&lt;main&gt;
+  &lt;section&gt;  Qui som: una imatge i un paràgraf
+  &lt;section&gt;  Sortides: tres targetes (&lt;article&gt;)
+  &lt;section&gt;  Calendari: una taula
+  &lt;section&gt;  Inscripció: un formulari
+&lt;footer&gt;     quan es troba el club</pre>
+    <p>
+      Cada secció tindrà un <code>id</code>, i el menú hi enllaçarà: <code>&lt;a href="#sortides"&gt;</code> porta a
+      <code>&lt;section id="sortides"&gt;</code>. Els noms, en català, en minúscules, sense accents i amb guions.
+    </p>
+  </section>
+
+  <section class="chapter-section">
+    <h2>Pas 2: l'HTML, sense estils</h2>
+    <p>
+      Aquí hi ha tot el contingut. Encara no té estils: és normal que es vegi pla. Mira que cada cosa té l'element que
+      li toca (capítols 1 a 8) i que el panell ⚠ Problemes no hi troba res. Prova els enllaços del menú.
+    </p>
+    <div class="simulador" data-id="c15-html" data-mode="document" data-forms data-height="720">
+      <script type="text/plain" data-file="index.html">
+        <!DOCTYPE html>
+        <html lang="ca">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>Club Excursionista Camí Ral</title>
+          </head>
+          <body>
+            <header class="capcalera">
+              <h1>Club Excursionista Camí Ral</h1>
+              <nav class="menu">
+                <a href="#qui-som">Qui som</a>
+                <a href="#sortides">Sortides</a>
+                <a href="#calendari">Calendari</a>
+                <a href="#inscripcio">Inscripció</a>
+              </nav>
+            </header>
+            <main class="pagina">
+              <section id="qui-som">
+                <h2>Qui som</h2>
+                <img src="paisatges/muntanya.svg" alt="Unes muntanyes nevades sota el sol" width="600" height="400">
+                <p>Som alumnes de l'institut que sortim a caminar un dissabte al mes. No cal experiència: només ganes de passar-ho bé.</p>
+              </section>
+              <section id="sortides">
+                <h2>Sortides</h2>
+                <div class="sortides">
+                  <article class="sortida">
+                    <h3>El Montseny</h3>
+                    <p>Fins al Turó de l'Home, amb vistes a tot el Vallès.</p>
+                  </article>
+                  <article class="sortida">
+                    <h3>Montserrat</h3>
+                    <p>Pugem pel camí dels Degotalls i baixem amb el cremallera.</p>
+                  </article>
+                  <article class="sortida">
+                    <h3>El Delta de l'Ebre</h3>
+                    <p>Un dia d'ocells, arrossars i bicicleta.</p>
+                  </article>
+                </div>
+              </section>
+              <section id="calendari">
+                <h2>Calendari</h2>
+                <table>
+                  <caption>Sortides del trimestre</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Data</th>
+                      <th scope="col">Lloc</th>
+                      <th scope="col">Dificultat</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>18 d'octubre</td>
+                      <td>El Montseny</td>
+                      <td>Mitjana</td>
+                    </tr>
+                    <tr>
+                      <td>15 de novembre</td>
+                      <td>Montserrat</td>
+                      <td>Alta</td>
+                    </tr>
+                    <tr>
+                      <td>13 de desembre</td>
+                      <td>El Delta de l'Ebre</td>
+                      <td>Baixa</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+              <section id="inscripcio">
+                <h2>Inscripció</h2>
+                <form>
+                  <label for="nom">Nom</label>
+                  <input type="text" id="nom" name="nom">
+                  <label for="curs">Curs</label>
+                  <select id="curs" name="curs">
+                    <option>1r d'ESO</option>
+                    <option>2n d'ESO</option>
+                    <option>3r d'ESO</option>
+                    <option>4t d'ESO</option>
+                  </select>
+                  <button type="submit">Apunta-m'hi</button>
+                </form>
+              </section>
+            </main>
+            <footer class="peu">
+              <p>Club Excursionista Camí Ral · Un dissabte al mes, de 9 a 14 h</p>
+            </footer>
+          </body>
+        </html>
+      </script>
+    </div>
+    <ul>
+      <li>Una sola <code>&lt;h1&gt;</code>, una <code>&lt;h2&gt;</code> per secció i una <code>&lt;h3&gt;</code> per targeta: els títols van en ordre.</li>
+      <li>Les classes (<code>capcalera</code>, <code>sortida</code>…) diuen què és cada cosa, no com es veurà. Les farem servir al CSS.</li>
+      <li>Encara no hi ha el <code>&lt;link&gt;</code> al full d'estil: l'afegirem al pas 3, quan hi hagi <code>estils.css</code>.</li>
+    </ul>
+  </section>
+
+  <section class="chapter-section">
+    <h2>Pas 3: el CSS, primer el mòbil</h2>
+    <p>
+      Ara l'HTML ja no es toca (és de només lectura, i té el <code>&lt;link&gt;</code>): tot es fa a
+      <code>estils.css</code>. Llegeix el CSS de dalt a baix. Està escrit en l'ordre en què es fa:
+    </p>
+    <ol>
+      <li><strong>Les variables</strong> (<code>:root</code>): els colors i l'espai, una sola vegada (capítol 11).</li>
+      <li><strong>La base:</strong> la lletra del <code>body</code> i les imatges flexibles (capítols 11 i 14).</li>
+      <li><strong>Cada part</strong>, pel seu nom de classe: les caixes amb el model de caixa (capítol 12) i el menú amb flexbox (capítol 13).</li>
+      <li><strong>El que canvia quan hi ha lloc</strong>, al final, dins d'un <code>@media (min-width: 40em)</code> (capítol 14).</li>
+    </ol>
+    <div class="simulador" data-id="c15-css" data-mode="document" data-forms data-height="760">
+      <script type="text/plain" data-file="index.html" data-readonly>
+        <!DOCTYPE html>
+        <html lang="ca">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>Club Excursionista Camí Ral</title>
+            <link rel="stylesheet" href="estils.css">
+          </head>
+          <body>
+            <header class="capcalera">
+              <h1>Club Excursionista Camí Ral</h1>
+              <nav class="menu">
+                <a href="#qui-som">Qui som</a>
+                <a href="#sortides">Sortides</a>
+                <a href="#calendari">Calendari</a>
+                <a href="#inscripcio">Inscripció</a>
+              </nav>
+            </header>
+            <main class="pagina">
+              <section id="qui-som">
+                <h2>Qui som</h2>
+                <img src="paisatges/muntanya.svg" alt="Unes muntanyes nevades sota el sol" width="600" height="400">
+                <p>Som alumnes de l'institut que sortim a caminar un dissabte al mes. No cal experiència: només ganes de passar-ho bé.</p>
+              </section>
+              <section id="sortides">
+                <h2>Sortides</h2>
+                <div class="sortides">
+                  <article class="sortida">
+                    <h3>El Montseny</h3>
+                    <p>Fins al Turó de l'Home, amb vistes a tot el Vallès.</p>
+                  </article>
+                  <article class="sortida">
+                    <h3>Montserrat</h3>
+                    <p>Pugem pel camí dels Degotalls i baixem amb el cremallera.</p>
+                  </article>
+                  <article class="sortida">
+                    <h3>El Delta de l'Ebre</h3>
+                    <p>Un dia d'ocells, arrossars i bicicleta.</p>
+                  </article>
+                </div>
+              </section>
+              <section id="calendari">
+                <h2>Calendari</h2>
+                <table>
+                  <caption>Sortides del trimestre</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Data</th>
+                      <th scope="col">Lloc</th>
+                      <th scope="col">Dificultat</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>18 d'octubre</td>
+                      <td>El Montseny</td>
+                      <td>Mitjana</td>
+                    </tr>
+                    <tr>
+                      <td>15 de novembre</td>
+                      <td>Montserrat</td>
+                      <td>Alta</td>
+                    </tr>
+                    <tr>
+                      <td>13 de desembre</td>
+                      <td>El Delta de l'Ebre</td>
+                      <td>Baixa</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+              <section id="inscripcio">
+                <h2>Inscripció</h2>
+                <form>
+                  <label for="nom">Nom</label>
+                  <input type="text" id="nom" name="nom">
+                  <label for="curs">Curs</label>
+                  <select id="curs" name="curs">
+                    <option>1r d'ESO</option>
+                    <option>2n d'ESO</option>
+                    <option>3r d'ESO</option>
+                    <option>4t d'ESO</option>
+                  </select>
+                  <button type="submit">Apunta-m'hi</button>
+                </form>
+              </section>
+            </main>
+            <footer class="peu">
+              <p>Club Excursionista Camí Ral · Un dissabte al mes, de 9 a 14 h</p>
+            </footer>
+          </body>
+        </html>
+      </script>
+      <script type="text/plain" data-file="estils.css">
+        /* Club Excursionista Camí Ral */
+
+        /* 1. Les variables */
+        :root {
+          --color-principal: #1b5e20;
+          --color-suau: #f1f8e9;
+          --color-text: #212121;
+          --espai: 1rem;
+        }
+
+        /* 2. La base */
+        body {
+          margin: 0;
+          font-family: Verdana, sans-serif;
+          line-height: 1.5;
+          color: var(--color-text);
+        }
+
+        img {
+          max-width: 100%;
+          height: auto;
+        }
+
+        /* 3. Cada part (per al mòbil) */
+        .capcalera {
+          padding: var(--espai);
+          color: white;
+          background-color: var(--color-principal);
+        }
+
+        .menu {
+          display: flex;
+          flex-wrap: wrap;
+          gap: var(--espai);
+        }
+
+        .menu a {
+          color: white;
+        }
+
+        .pagina {
+          max-width: 50rem;
+          margin: 0 auto;
+          padding: var(--espai);
+        }
+
+        .sortides {
+          display: flex;
+          flex-direction: column;
+          gap: var(--espai);
+        }
+
+        .sortida {
+          padding: var(--espai);
+          background-color: var(--color-suau);
+          border-radius: 0.5rem;
+        }
+
+        th,
+        td {
+          padding: 0.5rem;
+          border: 1px solid var(--color-principal);
+        }
+
+        .peu {
+          padding: var(--espai);
+          text-align: center;
+          background-color: var(--color-suau);
+        }
+
+        /* 4. Quan hi ha lloc */
+        @media (min-width: 40em) {
+          .capcalera {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          }
+
+          .sortides {
+            flex-direction: row;
+          }
+
+          .sortida {
+            flex: 1;
+          }
+        }
+      </script>
+    </div>
+    <p>Algunes coses per provar:</p>
+    <ul>
+      <li>Canvia <code>--color-principal</code> per <code>#0d47a1</code> (un blau): canvien la capçalera i les vores de la taula, tot alhora. Per això hi ha variables.</li>
+      <li>Canvia <code>40em</code> per <code>60em</code>: el resultat ja no és prou ample, i la pàgina es queda en la versió del mòbil.</li>
+      <li>Esborra la regla d'<code>img</code>: la imatge fa 600 píxels i se surt de la pàgina.</li>
+    </ul>
+  </section>
+
+  <section class="chapter-section">
+    <h2>Pas 4: la revisió</h2>
+    <p>Abans de donar una pàgina per acabada, repassa-la amb aquesta llista. És la mateixa per a qualsevol pàgina que facis:</p>
+    <aside class="codi-net">
+      <p class="codi-net__titol">🧹 Codi net: la llista de la pàgina acabada</p>
+      <ul>
+        <li>L'esquelet complet: <code>&lt;!DOCTYPE html&gt;</code>, <code>lang</code>, <code>charset</code>, <code>viewport</code> i un <code>&lt;title&gt;</code> que diu de què va la pàgina.</li>
+        <li>Cada etiqueta que s'obre es tanca, i la indentació reflecteix el niuament.</li>
+        <li>Els elements diuen què és cada cosa: títols en ordre, <code>header</code>, <code>nav</code>, <code>main</code>, <code>section</code>, <code>footer</code>.</li>
+        <li>Els enllaços diuen on porten; les imatges tenen un <code>alt</code> que les descriu; cada camp té la seva etiqueta.</li>
+        <li>El contingut, a l'HTML; l'aspecte, al CSS. Cap <code>style=""</code>.</li>
+        <li>Classes pel significat, colors i espais en variables, i primer el mòbil.</li>
+        <li>El panell ⚠ Problemes, buit. I prova la pàgina estreta i ampla.</li>
+      </ul>
+    </aside>
+  </section>
+
+  <section class="chapter-section">
+    <h2>Errors típics</h2>
+    <p>En una pàgina gran, els errors s'amaguen bé. Mira el resultat i llegeix el panell ⚠ Problemes.</p>
+
+    <h3>Un enllaç del menú que no porta enlloc</h3>
+    <div class="simulador" data-readonly data-height="360">
+      <script type="text/plain" data-file="index.html">
+        <nav>
+          <a href="#qui-som">Qui som</a>
+          <a href="#sortida">Sortides</a>
+        </nav>
+        <section id="qui-som">
+          <h2>Qui som</h2>
+        </section>
+        <section id="sortides">
+          <h2>Sortides</h2>
+        </section>
+      </script>
+    </div>
+    <p>L'enllaç diu <code>#sortida</code>, però la secció és <code>id="sortides"</code>. En clicar-lo, no passa res.</p>
+
+    <h3>Una variable mal escrita</h3>
+    <div class="simulador" data-readonly data-height="360">
+      <script type="text/plain" data-file="index.html">
+        <header class="capcalera">
+          <h1>Club Excursionista Camí Ral</h1>
+        </header>
+      </script>
+      <script type="text/plain" data-file="estils.css">
+        :root {
+          --color-principal: #1b5e20;
+        }
+
+        .capcalera {
+          color: white;
+          background-color: var(--color-prinicpal);
+        }
+      </script>
+    </div>
+    <p>La capçalera no té color de fons, i el títol, blanc sobre blanc, no es veu. El navegador no diu res; el panell sí.</p>
+
+    <h3>Una secció sense títol</h3>
+    <div class="simulador" data-readonly data-height="360">
+      <script type="text/plain" data-file="index.html">
+        <section id="calendari">
+          <p>La propera sortida és el 18 d'octubre.</p>
+        </section>
+      </script>
+    </div>
+    <p>Es veu bé, però una <code>&lt;section&gt;</code> sense títol és una part de la pàgina que no diu què és: qui fa servir un lector de pantalla no la troba.</p>
+  </section>
+
+  <section class="chapter-section">
+    <h2>Exercici: la pàgina del teu club</h2>
+    <p>
+      Ara et toca a tu: fes la pàgina d'un club, real o inventat (de lectura, d'escacs, de bàsquet, de cuina…). El
+      contingut és teu; el que ha de complir és això:
+    </p>
+    <ul>
+      <li>el <code>&lt;meta name="viewport"&gt;</code> al <code>&lt;head&gt;</code>;</li>
+      <li>a la capçalera, un <code>&lt;nav&gt;</code> amb almenys tres enllaços a seccions de la pàgina (<code>href="#…"</code>);</li>
+      <li>dins del <code>&lt;main&gt;</code>, almenys tres <code>&lt;section&gt;</code> amb el seu <code>id</code> i el seu títol <code>&lt;h2&gt;</code>;</li>
+      <li>una imatge (de les de <code>recursos</code>, com <code>gat.svg</code> o <code>animals/peix.svg</code>) amb el seu <code>alt</code>, una llista, una taula amb capçaleres (<code>&lt;th&gt;</code>) i un formulari amb almenys un camp i la seva etiqueta;</li>
+      <li>al CSS, almenys un color de fons que vingui d'una variable (<code>var(--…)</code>);</li>
+      <li>en un mòbil, res no se surt per la dreta; en una pantalla ampla, els enllaços del menú van en fila;</li>
+      <li>cap error ni cap avís al panell ⚠ Problemes.</li>
+    </ul>
+    <p>Pots copiar idees (i codi) dels passos d'aquest capítol. Quan acabis, prem <strong>✓ Comprova</strong>.</p>
+    <div class="simulador" data-id="c15-exercici" data-goal-id="cap-15-ex" data-mode="document" data-forms data-height="720">
+      <script type="text/plain" data-file="index.html">
+        <!DOCTYPE html>
+        <html lang="ca">
+          <head>
+            <meta charset="UTF-8">
+            <title>El meu club</title>
+            <link rel="stylesheet" href="estils.css">
+          </head>
+          <body>
+            <header class="capcalera">
+              <h1>El meu club</h1>
+            </header>
+            <main class="pagina">
+              <!-- Les seccions del club -->
+            </main>
+            <footer class="peu">
+              <p>El meu club</p>
+            </footer>
+          </body>
+        </html>
+      </script>
+      <script type="text/plain" data-file="estils.css">
+        /* Estils del club */
+
+        :root {
+          --color-principal: teal;
+          --espai: 1rem;
+        }
+
+        body {
+          margin: 0;
+          font-family: Verdana, sans-serif;
+        }
+      </script>
+      <script type="application/json" data-checks>
+        [
+          { "type": "attr", "selector": "meta[name=\"viewport\"]", "name": "content", "includes": "width=device-width",
+            "msg": "Al <head> hi ha <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">." },
+          { "type": "count", "selector": "header nav a", "min": 3,
+            "msg": "A la capçalera hi ha un <nav> amb almenys tres enllaços." },
+          { "type": "attr", "selector": "header nav a", "name": "href", "matches": "^#.", "all": true,
+            "msg": "Els enllaços del menú porten a seccions de la pàgina (href=\"#…\")." },
+          { "type": "count", "selector": "main section[id]", "min": 3,
+            "msg": "Dins del <main> hi ha almenys tres <section>, cadascuna amb el seu id." },
+          { "type": "count", "selector": "main section > h2", "min": 3,
+            "msg": "Cada secció té el seu títol <h2>." },
+          { "type": "attr", "selector": "main img", "name": "alt", "nonEmpty": true,
+            "msg": "Hi ha una imatge amb el seu alt." },
+          { "type": "exists", "selector": "main ul > li, main ol > li",
+            "msg": "Hi ha una llista (<ul> o <ol>)." },
+          { "type": "exists", "selector": "main table th",
+            "msg": "Hi ha una taula amb capçaleres (<th>)." },
+          { "type": "exists", "selector": "main form label",
+            "msg": "Hi ha un formulari amb almenys un camp i la seva etiqueta (<label>)." },
+          { "type": "uses-css", "prop": "background-color", "valueIncludes": "var(--",
+            "msg": "Almenys un color de fons ve d'una variable (var(--…))." },
+          { "type": "layout", "selector": "main", "kind": "fits-width", "width": 360,
+            "msg": "En un mòbil, la pàgina no se surt per la dreta." },
+          { "type": "layout", "selector": "main img", "kind": "fits-width", "width": 360,
+            "msg": "En un mòbil, la imatge no se surt per la dreta." },
+          { "type": "layout", "selector": "header nav a", "kind": "row",
+            "msg": "En una pantalla ampla (800 píxels), els enllaços del menú van en fila." },
+          { "type": "lint", "maxErrors": 0,
+            "msg": "El panell ⚠ Problemes no mostra cap error." },
+          { "type": "lint", "maxWarnings": 0,
+            "msg": "Tampoc no mostra cap avís." }
+        ]
+      </script>
+    </div>
+  </section>
+
+  <section class="chapter-section">
+    <h2>Troba l'error</h2>
+    <p>
+      La pàgina del club d'escacs té un error de cada part del curs: una llista, una imatge, un formulari, una variable i
+      una pàgina que s'adapta. Són cinc. Arregla'ls amb l'ajuda del panell ⚠ Problemes, i quan acabis prem
+      <strong>✓ Comprova</strong>.
+    </p>
+    <div class="simulador" data-id="c15-troba-error" data-goal-id="cap-15-bug" data-mode="document" data-forms data-height="720">
+      <script type="text/plain" data-file="index.html">
+        <!DOCTYPE html>
+        <html lang="ca">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>Club d'escacs</title>
+            <link rel="stylesheet" href="estils.css">
+          </head>
+          <body>
+            <header class="capcalera">
+              <h1>Club d'escacs</h1>
+              <nav class="menu">
+                <a href="#horari">Horari</a>
+                <a href="#normes">Normes</a>
+                <a href="#inscripcio">Inscripció</a>
+              </nav>
+            </header>
+            <main class="pagina">
+              <section id="horari">
+                <h2>Horari</h2>
+                <img src="gat.svg" width="200" height="200">
+                <p>Ens trobem els dimarts i els dijous a l'hora del pati, a la biblioteca.</p>
+              </section>
+              <section id="normes">
+                <h2>Normes</h2>
+                <ul>
+                  <li>Peça tocada, peça moguda.
+                  <li>Es juga en silenci.</li>
+                  <li>En acabar, es donen la mà.</li>
+                </ul>
+              </section>
+              <section id="inscripcio">
+                <h2>Inscripció</h2>
+                <form>
+                  <label for="nom">Nom</label>
+                  <input type="text" id="alumne" name="nom">
+                  <button type="submit">Apunta-m'hi</button>
+                </form>
+              </section>
+            </main>
+          </body>
+        </html>
+      </script>
+      <script type="text/plain" data-file="estils.css">
+        /* Estils del club d'escacs */
+
+        :root {
+          --color-fosc: #263238;
+          --espai: 1rem;
+        }
+
+        body {
+          margin: 0;
+          font-family: Georgia, serif;
+        }
+
+        .capcalera {
+          padding: var(--espai);
+          color: white;
+          background-color: var(--color-fosca);
+        }
+
+        .menu {
+          display: flex;
+          flex-direction: column;
+          gap: var(--espai);
+        }
+
+        .menu a {
+          color: white;
+        }
+
+        .pagina {
+          padding: var(--espai);
+        }
+
+        @media min-width: 40em {
+          .menu {
+            flex-direction: row;
+          }
+        }
+      </script>
+      <script type="application/json" data-checks>
+        [
+          { "type": "count", "selector": "#normes li", "eq": 3,
+            "msg": "La llista de normes té tres elements, cadascun tancat amb </li>." },
+          { "type": "attr", "selector": "main img", "name": "alt", "nonEmpty": true,
+            "msg": "La imatge té un alt que la descriu." },
+          { "type": "lint", "rules": ["html/control-label"], "maxErrors": 0,
+            "msg": "L'etiqueta «Nom» és del camp que té al costat (el for de l'etiqueta i l'id del camp coincideixen)." },
+          { "type": "style", "selector": ".capcalera", "prop": "background-color", "equals": "#263238",
+            "msg": "La capçalera té el fons fosc de la variable --color-fosc." },
+          { "type": "layout", "selector": ".menu a", "kind": "column", "width": 360,
+            "msg": "En un mòbil, els enllaços del menú van en columna." },
+          { "type": "layout", "selector": ".menu a", "kind": "row",
+            "msg": "En una pantalla ampla, els enllaços del menú van en fila." },
+          { "type": "lint", "maxErrors": 0,
+            "msg": "El panell ⚠ Problemes no mostra cap error." },
+          { "type": "lint", "maxWarnings": 0,
+            "msg": "Tampoc no mostra cap avís." }
+        ]
+      </script>
+    </div>
+  </section>
+
+  <section class="chapter-section">
+    <h2>Comprova què has après</h2>
+    <div class="quiz" data-goal-id="cap-15-quiz">
+      <div class="quiz-q" data-correcta="2">
+        <p>En quin ordre es fa una pàgina?</p>
+        <ol class="quiz-opcions"><li>Primer el CSS, després l'HTML</li><li>El pla, l'HTML, el CSS i la revisió</li><li>L'HTML i el CSS alhora, línia a línia</li></ol>
+        <p class="quiz-explica">L'estructura, abans de l'estil: primer què hi ha i què és cada cosa; després, com es veu.</p>
+      </div>
+      <div class="quiz-q" data-correcta="1">
+        <p>Un enllaç del menú diu <code>href="#sortides"</code>. Què hi ha d'haver a la pàgina?</p>
+        <ol class="quiz-opcions"><li>Un element amb <code>id="sortides"</code></li><li>Un fitxer <code>sortides.html</code></li><li>Una classe <code>sortides</code></li></ol>
+        <p class="quiz-explica"><code>#sortides</code> porta a l'element que té aquest <code>id</code>.</p>
+      </div>
+      <div class="quiz-q" data-correcta="3">
+        <p>Quan està acabada una pàgina?</p>
+        <ol class="quiz-opcions"><li>Quan es veu bé a l'ordinador</li><li>Quan té molts colors</li><li>Quan el panell ⚠ Problemes és buit i es veu bé estreta i ampla</li></ol>
+        <p class="quiz-explica">Es veu bé a totes les pantalles i el codi és net: llavors està acabada.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter-section">
+    <h2>Resum</h2>
+    <div class="resum">
+      <ul>
+        <li>Una pàgina es fa per passos: el pla, l'HTML (el contingut i què és cada cosa), el CSS (variables, base, cada part i, al final, el que canvia quan hi ha lloc) i la revisió.</li>
+        <li>El menú enllaça les seccions amb <code>href="#id"</code>, i cada secció té el seu <code>id</code> i el seu títol.</li>
+        <li>Les variables fan que canviar un color sigui canviar una línia.</li>
+        <li>La pàgina està acabada quan el panell ⚠ Problemes és buit i es veu bé estreta i ampla.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="chapter-section">
+    <h2>I ara què?</h2>
+    <p>
+      Has acabat el curs: ja saps fer una pàgina web sencera, ben feta i que s'adapta a qualsevol pantalla. Per
+      continuar, fes-ne més a l'<a href="../editor/index.html">editor lliure</a>: la pàgina d'un llibre que t'hagi
+      agradat, d'una sèrie, d'un viatge o de l'escola. Cada pàgina nova és la millor pràctica.
+    </p>
+  </section>
+</main>
+
+</body>
+</html>

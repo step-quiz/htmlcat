@@ -1,0 +1,37 @@
+/* Estils del club d'escacs */
+
+:root {
+  --color-fosc: #263238;
+  --espai: 1rem;
+}
+
+body {
+  margin: 0;
+  font-family: Georgia, serif;
+}
+
+.capcalera {
+  padding: var(--espai);
+  color: white;
+  background-color: var(--color-fosc);
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espai);
+}
+
+.menu a {
+  color: white;
+}
+
+.pagina {
+  padding: var(--espai);
+}
+
+@media (min-width: 40em) {
+  .menu {
+    flex-direction: row;
+  }
+}

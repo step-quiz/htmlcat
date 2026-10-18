@@ -273,3 +273,187 @@
   margin-left: auto;
   text-align: right;
 }
+
+/* ── Activitats: problemes de Parsons i qüestionaris (activities/) ── */
+
+.parsons,
+.quiz {
+  margin: var(--space-3) 0;
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+}
+
+.parsons-enunciat {
+  margin-top: 0;
+}
+
+.parsons-llista {
+  margin: var(--space-2) 0;
+  padding: 0;
+  list-style: none;
+}
+
+.parsons-linia {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin: var(--space-1) 0;
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-bg);
+  cursor: grab;
+}
+
+/* La indentació de cada línia (2 espais per nivell, com al codi) */
+.parsons-linia[data-nivell="1"] { margin-left: 1.5rem; }
+.parsons-linia[data-nivell="2"] { margin-left: 3rem; }
+.parsons-linia[data-nivell="3"] { margin-left: 4.5rem; }
+.parsons-linia[data-nivell="4"] { margin-left: 6rem; }
+.parsons-linia[data-nivell="5"] { margin-left: 7.5rem; }
+.parsons-linia[data-nivell="6"] { margin-left: 9rem; }
+.parsons-linia[data-nivell="7"] { margin-left: 10.5rem; }
+.parsons-linia[data-nivell="8"] { margin-left: 12rem; }
+
+.parsons-linia--sobre {
+  border-style: dashed;
+  border-color: var(--color-accent);
+}
+
+.parsons-linia--malament {
+  border: 2px solid var(--color-error);
+}
+
+.parsons-linia__codi {
+  min-width: 0;
+  font-family: var(--font-code);
+  white-space: pre;
+  overflow-x: auto;
+}
+
+.parsons-linia__botons {
+  display: flex;
+  flex-shrink: 0;
+  gap: 2px;
+}
+
+.parsons-linia__boto,
+.quiz-opcio {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-bg);
+  color: var(--color-text);
+  font: inherit;
+  cursor: pointer;
+}
+
+.parsons-linia__boto {
+  min-width: 2rem;
+  min-height: 2rem;
+}
+
+.parsons-linia__boto:hover,
+.quiz-opcio:hover:not(:disabled) {
+  border-color: var(--color-accent);
+}
+
+.activitat-accions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.activitat-accions .boto {
+  border: 0;
+  font: inherit;
+  cursor: pointer;
+}
+
+.activitat-accions .boto--secundari {
+  border: 2px solid var(--color-accent);
+}
+
+.activitat-resultat {
+  margin-bottom: 0;
+  font-weight: 700;
+}
+
+.activitat-resultat:empty {
+  display: none;
+}
+
+.activitat-resultat--ok {
+  color: var(--color-ok);
+}
+
+.activitat-resultat--ko {
+  color: var(--color-error);
+}
+
+.quiz-q {
+  padding: var(--space-2) 0;
+  border-bottom: 1px dashed var(--color-border);
+}
+
+.quiz-q:last-of-type {
+  border-bottom: 0;
+}
+
+.quiz-num {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.875rem;
+}
+
+.quiz-opcions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: var(--space-2) 0;
+  padding: 0;
+  list-style: none;
+}
+
+.quiz-opcio {
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  text-align: left;
+}
+
+.quiz-opcio:disabled {
+  cursor: default;
+}
+
+.quiz-opcio--bona {
+  border: 2px solid var(--color-ok);
+  color: var(--color-ok);
+  font-weight: 700;
+}
+
+.quiz-opcio--bona::after {
+  content: " ✓";
+}
+
+.quiz-opcio--dolenta {
+  border-color: var(--color-error);
+  color: var(--color-error);
+  text-decoration: line-through;
+}
+
+.quiz-estat:empty {
+  display: none;
+}
+
+.quiz-estat {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.9375rem;
+}
+
+.quiz-explica {
+  margin-bottom: 0;
+  color: var(--color-muted);
+}

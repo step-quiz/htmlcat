@@ -1,0 +1,38 @@
+/* Estils del club */
+
+:root {
+  --color-principal: teal;
+  --espai: 1rem;
+}
+
+body {
+  margin: 0;
+  font-family: Verdana, sans-serif;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+.capcalera {
+  padding: var(--espai);
+  color: white;
+  background-color: var(--color-principal);
+}
+
+.menu {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espai);
+}
+
+.menu a {
+  color: white;
+}
+
+.pagina {
+  max-width: 50rem;
+  margin: 0 auto;
+  padding: var(--espai);
+}

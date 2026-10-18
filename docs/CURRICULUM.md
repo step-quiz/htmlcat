@@ -33,7 +33,7 @@
 | 12 | El model de caixa | `margin`, `border`, `border-radius`, `padding`, `width`, `box-sizing`, centrar amb `margin: 0 auto`, `display` (`block`, `inline`, `inline-block`, `none`) | Una escala d'espais coherent | ✅ `cap-12-ex`, `cap-12-bug` |
 | 13 | Flexbox | `display: flex`, `flex-direction`, `justify-content`, `align-items`, `gap`, `flex-wrap`, `flex: 1` | Maqueta amb intenció, no amb trucs | ✅ `cap-13-ex`, `cap-13-bug` |
 | 14 | Pàgines que s'adapten | `meta viewport`, `max-width`, imatges flexibles, `@media` (`min-width`, `max-width`) | Primer el mòbil | ✅ `cap-14-ex`, `cap-14-bug` |
-| 15 | Projecte final | Una pàgina personal o d'un club amb diverses seccions | Tot junt | ⏳ |
+| 15 | Projecte final | Una pàgina d'un club amb diverses seccions, pas a pas (pla, HTML, CSS, revisió); l'exercici és la pàgina del club de l'alumne | Tot junt: la llista de la pàgina acabada | ✅ `cap-15-ex`, `cap-15-bug` |
 
 Extres opcionals: CSS Grid, transicions, capítol pont cap a la part B de JSCat.
 

@@ -414,6 +414,36 @@
   </section>
 
   <section class="chapter-section">
+    <h2>Comprova què has après</h2>
+    <div class="parsons" data-goal-id="cap-9-parsons">
+      <p class="parsons-enunciat">🧩 Ordena i indenta el full d'estil: primer la regla dels títols <code>h1</code> (de color <code>teal</code>) i després la dels paràgrafs.</p>
+      <pre class="parsons-codi">h1 {
+  color: teal;
+}
+p {
+  font-size: 1.2rem;
+}</pre>
+    </div>
+    <div class="quiz" data-goal-id="cap-9-quiz">
+      <div class="quiz-q" data-correcta="1">
+        <p>Com s'enllaça el full d'estil <code>estils.css</code>?</p>
+        <ol class="quiz-opcions"><li><code>&lt;link rel="stylesheet" href="estils.css"&gt;</code></li><li><code>&lt;style src="estils.css"&gt;</code></li><li><code>&lt;script src="estils.css"&gt;</code></li></ol>
+        <p class="quiz-explica">El <code>&lt;link&gt;</code> va al <code>&lt;head&gt;</code>, amb <code>rel="stylesheet"</code> i el nom del fitxer a <code>href</code>.</p>
+      </div>
+      <div class="quiz-q" data-correcta="2">
+        <p>Què falla en aquesta regla? <code>p { color: red font-size: 2rem; }</code></p>
+        <ol class="quiz-opcions"><li>Falten les cometes a <code>red</code></li><li>Falta un <code>;</code> després de <code>red</code></li><li><code>font-size</code> no existeix</li></ol>
+        <p class="quiz-explica">Cada declaració acaba amb <code>;</code>. Sense, el navegador llegeix «red font-size: 2rem» com un sol valor, i no aplica cap de les dues.</p>
+      </div>
+      <div class="quiz-q" data-correcta="3">
+        <p>Per què és millor el CSS en un fitxer a part que en atributs <code>style=""</code>?</p>
+        <ol class="quiz-opcions"><li>Perquè <code>style=""</code> no funciona en tots els navegadors</li><li>Perquè ocupa menys</li><li>Perquè el contingut i l'aspecte queden separats, i l'aspecte es canvia en un sol lloc</li></ol>
+        <p class="quiz-explica">Amb un full d'estil, canviar el color de tots els títols és canviar una línia.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter-section">
     <h2>Resum</h2>
     <div class="resum">
       <ul>

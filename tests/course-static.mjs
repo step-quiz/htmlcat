@@ -34,7 +34,12 @@
 //      tests/solutions/<goal-id>/, amb fitxers que el simulador té;
 //  12. la llista d'imatges lliures (site/js/preview/recursos.js) i les
 //      imatges de site/recursos/ coincideixen, i cada imatge té la seva
-//      fila a site/recursos/CREDITS.md.
+//      fila a site/recursos/CREDITS.md;
+//  13. activitats (docs/STATE.md §2.10): cada problema de Parsons té el seu
+//      <pre class="parsons-codi"> amb almenys tres línies diferents i
+//      indentat amb múltiples de 2 espais; cada pregunta d'un qüestionari
+//      té data-correcta entre 1 i el nombre d'opcions (almenys dues) i una
+//      explicació; els data-goal-id de les activitats tampoc no es repeteixen.
 // ════════════════════════════════════════════════════════
 
 import { readdirSync, readFileSync, existsSync, statSync } from 'node:fs';
@@ -218,6 +223,37 @@ for (const file of siteFiles.filter((f) => extname(f) === '.html')) {
       for (const name of solution.filter((n) => !names.has(n))) problems.push(`${where(sim)}: la solució té ${name}, que el simulador no té`);
     }
   }
+}
+
+// ── Activitats: problemes de Parsons i qüestionaris ──
+const decode = (text) => text.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, '&');
+for (const file of siteFiles.filter((f) => extname(f) === '.html')) {
+  const html = readFileSync(file, 'utf8');
+  const lineOf = (index) => html.slice(0, index).split('\n').length;
+  const where = (index) => `${relative(ROOT, file)}:${lineOf(index)}`;
+  for (const m of html.matchAll(/<div class="(parsons|quiz)"([^>]*)>/g)) {
+    const goal = /data-goal-id="([^"]+)"/.exec(m[2])?.[1];
+    if (!goal) { problems.push(`${where(m.index)}: una activitat (.${m[1]}) necessita data-goal-id`); continue; }
+    if (seenGoals.has(goal)) problems.push(`${where(m.index)}: data-goal-id="${goal}" ja és a ${seenGoals.get(goal)}`);
+    seenGoals.set(goal, where(m.index));
+  }
+  for (const m of html.matchAll(/<div class="parsons"[^>]*>([\s\S]*?)<\/div>/g)) {
+    const pre = /<pre class="parsons-codi">([\s\S]*?)<\/pre>/.exec(m[1]);
+    if (!pre) { problems.push(`${where(m.index)}: el problema de Parsons no té <pre class="parsons-codi">`); continue; }
+    const lines = decode(pre[1]).split('\n').filter((l) => l.trim());
+    if (new Set(lines.map((l) => l.trim())).size < 3) problems.push(`${where(m.index)}: el problema de Parsons ha de tenir almenys tres línies diferents`);
+    for (const line of lines) {
+      if (line.match(/^ */)[0].length % 2) problems.push(`${where(m.index)}: «${line.trim()}» no està indentada amb múltiples de 2 espais`);
+    }
+  }
+  for (const m of html.matchAll(/<div class="quiz-q" data-correcta="(\d+)">([\s\S]*?)<\/div>/g)) {
+    const options = (/<ol class="quiz-opcions">([\s\S]*?)<\/ol>/.exec(m[2])?.[1].match(/<li>/g) || []).length;
+    const correct = Number(m[1]);
+    if (options < 2) problems.push(`${where(m.index)}: una pregunta necessita almenys dues opcions (<ol class="quiz-opcions">)`);
+    if (correct < 1 || correct > options) problems.push(`${where(m.index)}: data-correcta="${correct}" no és cap de les ${options} opcions`);
+    if (!m[2].includes('class="quiz-explica"')) problems.push(`${where(m.index)}: la pregunta no té explicació (<p class="quiz-explica">)`);
+  }
+  for (const m of html.matchAll(/<div class="quiz-q"(?! data-correcta="\d+">)[^>]*>/g)) problems.push(`${where(m.index)}: cada pregunta (.quiz-q) necessita data-correcta="N"`);
 }
 
 // ── Imatges lliures: llista ↔ fitxers ↔ crèdits ──

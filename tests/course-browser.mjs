@@ -198,8 +198,11 @@ await checkSeveralSimulators();
 await checkFreeEditorRestore();
 await checkOldLanding();
 await checkFamily();
+await checkTree();
 for (const file of listPages(join(SITE, 'curs'))) {
-  for (const [, goal] of readFileSync(file, 'utf8').matchAll(/data-goal-id="([^"]+)"/g)) await checkExercise(file, goal);
+  const html = readFileSync(file, 'utf8');
+  for (const [, goal] of html.matchAll(/<div class="simulador"[^>]*data-goal-id="([^"]+)"/g)) await checkExercise(file, goal);
+  if (/<div class="(parsons|quiz)"/.test(html)) await checkActivities(file, html);
 }
 
 await browser.close();
@@ -597,6 +600,114 @@ async function checkExercise(file, goal) {
   const status = sim.locator('.sim-checks__status');   // (pot ser a la pestanya no visible)
   await status.waitFor({ state: 'attached' });
   if (!(await status.textContent()).includes('Ja has superat')) fail('després de recarregar no diu que ja està superat');
+  await page.evaluate(() => localStorage.clear());
+  await page.close();
+}
+
+/**
+ * Activitats (Parsons i qüestionaris), en un mòbil i només amb els botons
+ * (com amb el teclat): començar comprovant dona error; després es resolen
+ * (al qüestionari, primer una opció dolenta), es desa el progrés, i en
+ * tornar a la pàgina diu que ja estava fet. El menú no marca el capítol:
+ * el ✓ del capítol és el de l'exercici principal.
+ */
+async function checkActivities(file, html) {
+  const where = (goal) => `${relative(ROOT, file)} (${goal})`;
+  const page = await browser.newPage({ viewport: { width: 360, height: 740 } });
+  page.on('pageerror', (err) => problems.push(`${relative(ROOT, file)}: excepció: ${err.message}`));
+  await page.goto(urlOf(file), { waitUntil: 'networkidle' });
+  await page.evaluate(() => localStorage.clear());
+  await page.reload({ waitUntil: 'networkidle' });
+  const saved = () => page.evaluate(() => Object.keys(JSON.parse(localStorage.getItem('htmlcat:v1:progress') || '{}').goals || {}));
+  const decode = (text) => text.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, '&');
+
+  for (const [, goal, pre] of html.matchAll(/<div class="parsons" data-goal-id="([^"]+)">[\s\S]*?<pre class="parsons-codi">([\s\S]*?)<\/pre>/g)) {
+    const fail = (msg) => problems.push(`${where(goal)}: ${msg}`);
+    const solution = decode(pre).split('\n').filter((l) => l.trim()).map((l) => ({ text: l.trim(), level: l.match(/^ */)[0].length / 2 }));
+    const host = page.locator(`[data-goal-id="${goal}"]`);
+    await host.scrollIntoViewIfNeeded();
+    const lines = host.locator('.parsons-linia');
+    await lines.first().waitFor();
+    if (await host.locator('pre').count()) fail('la solució (<pre>) encara és a la pàgina');
+    await host.getByRole('button', { name: 'Comprova' }).click();
+    if (!(await host.locator('.activitat-resultat--ko').count())) fail('el codi barrejat no hauria de ser correcte');
+    // Ordena amb ↑ i indenta amb ⇥, línia per línia
+    for (let i = 0; i < solution.length; i++) {
+      const texts = await lines.locator('.parsons-linia__codi').allTextContents();
+      let at = texts.findIndex((text, k) => k >= i && text === solution[i].text);
+      while (at > i) {
+        await lines.nth(at).locator('[data-accio="puja"]').click();
+        at--;
+      }
+      for (let l = 0; l < solution[i].level; l++) await lines.nth(i).locator('[data-accio="indenta"]').click();
+    }
+    await host.getByRole('button', { name: 'Comprova' }).click();
+    if (!(await host.locator('.activitat-resultat--ok').count())) fail('ordenat i indentat com la solució, no surt com a correcte: ' + await host.locator('.activitat-resultat').innerText());
+    if (!(await saved()).includes(goal)) fail('no es desa al progrés');
+  }
+
+  for (const [, goal] of html.matchAll(/<div class="quiz" data-goal-id="([^"]+)">/g)) {
+    const fail = (msg) => problems.push(`${where(goal)}: ${msg}`);
+    const host = page.locator(`[data-goal-id="${goal}"]`);
+    await host.scrollIntoViewIfNeeded();
+    const questions = host.locator('.quiz-q');
+    for (let q = 0; q < await questions.count(); q++) {
+      const question = questions.nth(q);
+      const correct = Number(await question.getAttribute('data-correcta')) - 1;
+      const options = question.locator('.quiz-opcio');
+      await options.nth(correct === 0 ? 1 : 0).click();
+      if (!(await question.locator('.quiz-opcio--dolenta').count())) fail(`pregunta ${q + 1}: una opció dolenta no es marca`);
+      if (await question.locator('.quiz-explica').isVisible()) fail(`pregunta ${q + 1}: l'explicació surt abans d'encertar`);
+      await options.nth(correct).click();
+      if (!(await question.locator('.quiz-explica').isVisible())) fail(`pregunta ${q + 1}: no surt l'explicació`);
+    }
+    const result = await host.locator('.activitat-resultat').innerText();
+    if (!/Qüestionari acabat/.test(result)) fail(`no diu que s'ha acabat (${result})`);
+    if (!(await saved()).includes(goal)) fail('no es desa al progrés');
+  }
+
+  if (await page.locator('.course-menu__item--done').count()) problems.push(`${relative(ROOT, file)}: les activitats no han de marcar el capítol al menú`);
+  await page.reload({ waitUntil: 'networkidle' });
+  for (const host of await page.locator('.parsons, .quiz').all()) {
+    await host.scrollIntoViewIfNeeded();
+    if (!(await host.locator('.activitat-resultat').innerText()).includes('Ja ho havies fet')) {
+      problems.push(`${relative(ROOT, file)} (${await host.getAttribute('data-goal-id')}): després de recarregar no diu que ja estava fet`);
+    }
+  }
+  await page.evaluate(() => localStorage.clear());
+  await page.close();
+}
+
+/**
+ * Panell 🌳 Arbre: a la primera taula del capítol 7 (escrita sense <tbody>)
+ * el <tbody> surt marcat «afegit pel navegador» i res més; en passar el
+ * ratolí per un element, es marca al resultat (i només aquell); i amb un
+ * canvi al codi, l'arbre es posa al dia.
+ */
+async function checkTree() {
+  const where = 'panell 🌳 Arbre (capitol-7.html)';
+  const fail = (msg) => problems.push(`${where}: ${msg}`);
+  const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
+  page.on('pageerror', (err) => fail(`excepció: ${err.message}`));
+  await page.goto(urlOf(join(SITE, 'curs', 'capitol-7.html')), { waitUntil: 'networkidle' });
+  const sim = page.locator('.simulador').first();
+  await sim.scrollIntoViewIfNeeded();
+  await sim.locator('.sim-panel-tab', { hasText: 'Arbre' }).click();
+  const panel = sim.locator('.sim-tree-panel');
+  await panel.locator('.sim-tree__node').first().waitFor();
+  const addedNodes = await panel.locator('.sim-tree__node--afegit .sim-tree__tag').allInnerTexts();
+  if (addedNodes.join() !== '<tbody>') fail(`els afegits haurien de ser només <tbody> i són: ${addedNodes.join(', ') || 'cap'}`);
+  if (!(await panel.innerText()).includes('"Mixa"')) fail('no mostra els textos');
+  const frame = sim.locator('iframe.sim-preview__frame');
+  const marked = () => frame.evaluate((f) => [...f.contentDocument.querySelectorAll('[data-htmlcat-arbre]')].map((n) => n.localName));
+  await panel.locator('.sim-tree__node', { hasText: '<th>' }).first().hover();
+  if ((await marked()).join() !== 'th') fail(`en passar el ratolí per un <th>, al resultat hauria de marcar-se un th (${(await marked()).join() || 'cap'})`);
+  await panel.locator('.sim-tree__help').hover();
+  if ((await marked()).length) fail('en treure el ratolí, el resultat hauria de quedar sense marques');
+  if (await frame.getAttribute('sandbox') !== 'allow-same-origin') fail('el sandbox de la previsualització ha canviat');
+  await sim.locator('.sim-code__panel:not([hidden]) textarea').fill('<p>Hola <b><i>món</b> i</i> tu</p>');
+  await page.waitForFunction(() => document.querySelector('.sim-tree-panel .sim-tree__node--afegit .sim-tree__tag')?.textContent === '<i>', null, { timeout: 3000 })
+    .catch(() => fail('amb <b><i>…</b>…</i>, la segona <i> hauria de sortir com a afegida'));
   await page.evaluate(() => localStorage.clear());
   await page.close();
 }

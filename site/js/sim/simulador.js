@@ -25,7 +25,9 @@
 // Els exercicis tenen, a més, el botó «✓ Comprova» i el panell
 // ✓ Comprovacions (sim/checks-panel.js): les comprovacions s'avaluen en
 // un iframe ocult (sim/check-frame.js) i, si se superen totes, l'exercici
-// queda superat (course/progress.js).
+// queda superat (course/progress.js). Tots els simuladors tenen, a més,
+// el panell 🌳 Arbre (sim/tree-panel.js): el document tal com l'ha
+// construït el navegador, amb el que hi ha afegit marcat.
 //
 // API pública:
 //   mountSimulator(el, { fileActions, chapter }) → { getFiles() }
@@ -46,6 +48,8 @@ import { isGoalCompleted, saveGoalCompleted } from '../course/progress.js';
 import { createTabList } from './tabs.js';
 import { createProblemsPanel } from './problems-panel.js';
 import { createChecksPanel } from './checks-panel.js';
+import { createTreePanel } from './tree-panel.js';
+import { buildSourceTree } from '../lang/html-model.js';
 import { renderForChecks } from './check-frame.js';
 
 const ASSET_BASE = new URL('../../recursos/', import.meta.url).href;
@@ -134,6 +138,7 @@ export function mountSimulator(host, { fileActions = false, chapter = Infinity }
 
   const hasChecks = Boolean(def.goalId && Array.isArray(def.checks));
   let checksPanel = null;   // només als exercicis (més avall)
+  let refreshTree = () => {};   // panell 🌳 Arbre (més avall)
 
   // ── Estructura ──
   host.textContent = '';
@@ -169,6 +174,7 @@ export function mountSimulator(host, { fileActions = false, chapter = Infinity }
   const preview = createPreview(previewBox, {
     title: t('sim.result.title'),
     forms: def.forms,
+    onLoad: () => refreshTree(),
     onLink(href, doc) {
       if (href.startsWith('#')) {
         const id = decodeURIComponent(href.slice(1));
@@ -296,28 +302,39 @@ export function mountSimulator(host, { fileActions = false, chapter = Infinity }
     return [input, open, download];
   }
 
-  // ── Panells: ⚠ Problemes (i, als exercicis, ✓ Comprovacions) ──
+  // ── Panells: ⚠ Problemes, ✓ Comprovacions (només als exercicis) i 🌳 Arbre ──
   const problemsBox = el('div', 'sim-panels__panel');
+  const checksBox = hasChecks ? el('div', 'sim-panels__panel') : null;
+  const treeBox = el('div', 'sim-panels__panel');
+  const panelItems = [{ label: t('sim.problems'), panel: problemsBox }];
+  if (hasChecks) panelItems.push({ label: t('sim.checks'), panel: checksBox });
+  panelItems.push({ label: t('sim.tree'), panel: treeBox });
+  const treeIndex = panelItems.length - 1;
+  const treePanel = createTreePanel(treeBox);
+  // L'arbre només es calcula quan es mira (i cada vegada que canvia el resultat)
   let panelTabs = null;
+  refreshTree = () => {
+    if (!panelTabs || panelTabs.selected() !== treeIndex) return;
+    const sourceRoot = buildSourceTree(files['index.html'] ?? '').root;
+    treePanel.update(preview.document(), { mode: def.mode, sourceRoot });
+  };
+  panelTabs = createTabList({
+    label: t('sim.panels'),
+    idPrefix: `${idPrefix}-panels`,
+    tabClass: 'sim-panel-tab',
+    items: panelItems,
+    onSelect: () => refreshTree(),
+  });
+  panelTabs.element.className = 'sim-panels__tabs';
+  panels.append(panelTabs.element, ...panelItems.map((item) => item.panel));
   if (hasChecks) {
-    const checksBox = el('div', 'sim-panels__panel');
-    panelTabs = createTabList({
-      label: t('sim.panels'),
-      idPrefix: `${idPrefix}-panels`,
-      tabClass: 'sim-panel-tab',
-      items: [{ label: t('sim.problems'), panel: problemsBox }, { label: t('sim.checks'), panel: checksBox }],
-    });
-    panelTabs.element.className = 'sim-panels__tabs';
-    panels.append(panelTabs.element, problemsBox, checksBox);
     checksPanel = createChecksPanel(checksBox);
     checksPanel.idle(isGoalCompleted(def.goalId));
     actions.prepend(createCheckButton());
-  } else {
-    panels.append(problemsBox);
   }
 
   const problemsPanel = createProblemsPanel(problemsBox, {
-    showTitle: !hasChecks,
+    showTitle: false,
     onSelect(problem) {
       selectTab(names.indexOf(problem.file));
       editors[problem.file].goTo(problem.start);

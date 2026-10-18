@@ -1,6 +1,6 @@
 # HANDOFF — start here (for a Claude session with no prior context)
 
-Last updated: 2026-10-05 (family icon selector), after chapter 14 (phase 5, content): parts A (HTML) and B (CSS) are complete; the final project (chapter 15) and the challenges are next.
+Last updated: 2026-10-18, after chapter 15 (phase 5, content): all 15 chapters are done (parts A and B and the final project); the challenges are next.
 Keep it short and current: when you finish a phase, rewrite the "Where we are" and
 "Next task" sections.
 
@@ -37,7 +37,7 @@ dropped every dot-file (see §6).
 - Phase 4 ✅ course shell (`site/js/course/`: data, progress, shell; STATE §2.8), checks DSL v1
   (`site/js/checks/`, "✓ Comprova", hidden 800×600 check frame; STATE §2.7) and chapter 1
   (`site/curs/capitol-1.html`, exercises `cap-1-ex` and `cap-1-bug`, solutions in `tests/solutions/`).
-- Phase 5 (content, one chapter per PR): chapters 1–14 done (`site/curs/capitol-N.html`,
+- Phase 5 (content, one chapter per PR): chapters 1–15 done (`site/curs/capitol-N.html`,
   exercises `cap-N-ex` and `cap-N-bug`); chapter 4 added six link rules, chapter 5 six
   image/attribute rules (per-element attributes in `lang/html-spec.js`), chapter 6 four
   page-structure rules, chapter 7 five table rules (`html/th-scope` is the first `info`
@@ -88,11 +88,15 @@ dropped every dot-file (see §6).
   it never matches), `css/fixed-width` (width > 360 px outside `@media (min-width)`) and
   `css/desktop-first` (info). The free editor, the root simulator and the landing page examples
   now include `<meta name="viewport">` (desktop browsers ignore it; it matters on phones).
-  Next: chapter 15, «Projecte final» (a personal or club page with several sections, everything
-  together; BLUEPRINT §5 says "all" rules). Then the 12 challenges (`docs/CURRICULUM.md` §2,
+  Chapter 15, «Projecte final» (2026-10-18): a club page built step by step (plan, HTML, CSS,
+  review checklist); no new rules. `cap-15-ex` is open-ended (the student's own club page): its checks
+  look at structure only (nav with ≥ 3 `#` links, ≥ 3 sections with id and `<h2>`, image with `alt`,
+  list, table with `<th>`, form with a label, a background colour from a variable, fits at 360 px,
+  menu in a row at 800 px, no errors or warnings). `cap-15-bug` has one bug from each part.
+  Next: the 12 challenges (`docs/CURRICULUM.md` §2,
   each with `afterChapter`; `REPTES` in `course/data.js` is still empty, and the course shell
   already supports `repte-N.html` pages: STATE §2.8).
-- Family icon selector (2026-10-05, STATE §2.9, D13): `site/js/family/family.js` + `site/css/family.css` put "EXPLORA" and the 4 Cat icons in the header of the **landing page only** (owner's decision: not in the free editor nor the chapters). Ported from JSCat's `family.js` as an ES module, with Josefin Sans self-hosted in `site/fonts/` (no Google Fonts: privacy of minors).
+- Family icon selector (2026-10-05, STATE §2.11, D13): `site/js/family/family.js` + `site/css/family.css` put "EXPLORA" and the 4 Cat icons in the header of the **landing page only** (owner's decision: not in the free editor nor the chapters). Ported from JSCat's `family.js` as an ES module, with Josefin Sans self-hosted in `site/fonts/` (no Google Fonts: privacy of minors).
 - Decisions D3, D4, D6–D12: the owner accepted all recommended options (STATE §3).
 - 233 unit tests + static checks + browser checks (editor, panel and every exercise end-to-end), all green.
 - Still pending from phase 0 (owner's job): confirm Cloudflare Pages deploys

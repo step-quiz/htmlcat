@@ -89,6 +89,31 @@ const TEXTS = {
   'sim.problems.goto': 'Porta el cursor a la línia {line}',
   'sim.problems.more': 'i {n} més com aquest',
   'sim.problems.hidden': 'N\'hi ha més: arregla primer aquests.',
+
+  'sim.tree': '🌳 Arbre',
+  'sim.tree.label': 'Arbre del document',
+  'sim.tree.help': 'Així ha entès el navegador el teu codi: cada element, amb el que té a dins. Passa el ratolí per sobre d\'un element (o porta-hi el focus amb Tab) i es marcarà al resultat.',
+  'sim.tree.added': 'afegit pel navegador',
+  'sim.tree.legend': 'Els elements marcats «afegit pel navegador» no són al teu codi: el navegador els ha afegit per arreglar-lo o completar-lo.',
+
+  'activity.done.before': '✓ Ja ho havies fet abans.',
+  'parsons.list': 'Línies del codi (ordena-les i indenta-les)',
+  'parsons.check': '✓ Comprova',
+  'parsons.reset': '⟲ Torna a començar',
+  'parsons.dedent': 'Menys indentació',
+  'parsons.indent': 'Més indentació',
+  'parsons.up': 'Puja',
+  'parsons.down': 'Baixa',
+  'parsons.button.label': '{action}: {line}',
+  'parsons.ok': '✓ Correcte! El codi està ben ordenat i ben indentat.',
+  'parsons.lines.one': 'Hi ha 1 línia marcada',
+  'parsons.lines': 'Hi ha {n} línies marcades',
+  'parsons.wrong.order': '✗ {lines}. Revisa l\'ordre (i després la indentació).',
+  'parsons.wrong.indent': '✗ {lines}. L\'ordre és bo: revisa la indentació (⇤ ⇥).',
+  'quiz.num': 'Pregunta {n} de {total}',
+  'quiz.right': 'Correcte!',
+  'quiz.wrong': 'No és aquesta. Torna-ho a provar.',
+  'quiz.done': '✓ Qüestionari acabat! Has encertat {n} de {total} preguntes a la primera.',
 };
 
 /**

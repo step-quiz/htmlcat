@@ -5,6 +5,7 @@
 // de codi i munta cada simulador quan s'acosta a la pantalla (una pàgina
 // amb vint simuladors no en crea vint de cop). El revisor de codi de cada
 // simulador només aplica el que ja s'ha ensenyat fins a aquesta pàgina.
+// Si hi ha activitats (Parsons, qüestionaris), carrega activities/.
 // ════════════════════════════════════════════════════════
 
 import { initCoursePage } from '../course/shell.js';
@@ -23,3 +24,8 @@ const observer = new IntersectionObserver((entries) => {
 }, { rootMargin: '200px' });
 
 for (const host of document.querySelectorAll('.simulador')) observer.observe(host);
+
+// Problemes de Parsons i qüestionaris: el codi només es baixa si la pàgina en té
+if (document.querySelector('.parsons, .quiz')) {
+  import('../activities/activities.js').then(({ mountActivities }) => mountActivities(document));
+}
