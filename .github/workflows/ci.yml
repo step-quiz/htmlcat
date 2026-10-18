@@ -5,6 +5,9 @@ name: Comprova HTMLCat
 on:
   push:
   pull_request:
+  # També el llança unzip-upload.yml després de desar un ZIP (un commit del
+  # bot no dispara cap workflow per si sol).
+  workflow_dispatch:
 
 jobs:
   tests:
