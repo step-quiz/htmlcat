@@ -1,6 +1,6 @@
 # HTMLCat — Build Blueprint (cold-start brief for Claude)
 
-> **Audience:** a Claude instance that starts with zero context in the new `step-quiz/htmlcat` repository. *(Note 2026-10-02: the canonical repository is now `step-quiz2/htmlcat2`; see `docs/STATE.md` §3.)*
+> **Audience:** a Claude instance that starts with zero context in the new `step-quiz/htmlcat` repository. *(Note: the canonical repository is `step-quiz/htmlcat` again since 2026-10-17; between 2026-10-02 and then it was `step-quiz2/htmlcat2`. See `HANDOFF.md` §1.)*
 > **Origin:** written on 2026-10-02 after a full code review of `step-quiz/pycat` (HEAD `4af142f`) and `step-quiz/jscat` (HEAD `9c328c1`), plus browser experiments in Chromium (Appendix A).
 > **Lifetime:** this is a *kickoff* document. `docs/STATE.md` is the single source of truth for *what exists*; this file is the design reference for what is not built yet, and the rationale (*why*) for what is. When a decision here is reversed, record it in `docs/STATE.md` §Decisions and add a one-line note next to the affected section here. Never let this file silently rot (see §3.2, anti-pattern A1).
 
