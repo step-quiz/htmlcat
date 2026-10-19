@@ -636,7 +636,7 @@ El propietari va acceptar totes les opcions recomanades (BLUEPRINT §11).
 | D4 | L'editor no tanca les etiquetes sol (cal aprendre a tancar-les); correcció ràpida des del cap. 4 | Correcció ràpida: fase 6 |
 | D6 | Tema clar per defecte; fosc segons el sistema i amb un botó | Fet el tema segons el sistema; el botó, fase 7 |
 | D7 | Space Mono per al codi i una sense serifa per al text, servides des del mateix web | Pendent (fase 7); ara, lletres del sistema |
-| D8 | Domini `htmlcat.step-quiz.net` | Pendent de configurar a Cloudflare (§5) |
+| D8 | Domini `htmlcat.step-quiz.net` | Fet: el web hi és publicat (confirmat pel propietari el 2026-10-19) |
 | D9 | Currículum: els 15 capítols i 12 reptes de [`CURRICULUM.md`](CURRICULUM.md) | Confirmat |
 | D10 | HTMLCat abans de la part B de JSCat; enllaços en tots dos sentits | HTMLCat ja enllaça els altres tres des de la portada (D13); falta que els altres projectes enllacin HTMLCat |
 | D11 | Identificadors del motor en anglès, comentaris en català | Aplicada |
@@ -672,12 +672,11 @@ cada pull request (pestanya «Actions» de GitHub).
 
 ## 5. Publicació
 
-Cloudflare Pages (projecte `htmlcat`, adreça `htmlcat.pages.dev`) estava
-connectat a l'antic repositori. **Pendent:** comprovar que publica aquest
-(`step-quiz/htmlcat`; abans `step-quiz2/htmlcat2`), la branca `main`, i que fa una previsualització de
-cada PR. Configuració esperada: *framework preset* «None», ordre de compilació
-buida, carpeta de sortida l'arrel (no `site`: vegeu el paràgraf següent). També pendent: comprovar que `/tests/` i
-`/docs/` donen la pàgina 404 i afegir el domini `htmlcat.step-quiz.net` (D8).
+Cloudflare Pages (projecte `htmlcat`) publica `step-quiz/htmlcat`, branca `main`, a
+`https://htmlcat.step-quiz.net` (D8; confirmat pel propietari el 2026-10-19). Configuració:
+*framework preset* «None», ordre de compilació buida, carpeta de sortida l'arrel (no `site`: vegeu
+el paràgraf següent). Amb el `404.html` de l'arrel (2026-10-19), `/tests/` i `/docs/` donen la
+pàgina d'error.
 
 Des del 2026-10-04 (decisió del propietari, §3), l'`index.html` de l'arrel del
 repositori és la portada (Capítols i Editor lliure); l'editor lliure és
@@ -700,10 +699,8 @@ ni capçaleres de memòria cau llarga.
 
 Fases del BLUEPRINT §9.1:
 
-- [ ] **Fase 0 — Arrencada.** Fet: documentació, llicència, `site/` provisional,
-      tests i GitHub Action. Falta: comprovar que Cloudflare Pages publica
-      `step-quiz/htmlcat` (§5), que `/tests/` i `/docs/` donen 404 i el
-      domini `htmlcat.step-quiz.net`.
+- [x] **Fase 0 — Arrencada.** Documentació, llicència, tests, GitHub Action i publicació a
+      `https://htmlcat.step-quiz.net` (§5).
 - [x] Respondre les decisions pendents (§3): acceptades les recomanades (2026-10-03).
 - [x] **Fase 1 — Nucli del llenguatge:** tokenitzador d'HTML, analitzador de CSS, arbre del codi font, ressaltat.
 - [x] **Fase 2 — Editor, previsualització i editor lliure.**

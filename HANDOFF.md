@@ -110,9 +110,9 @@ dropped every dot-file (see §6).
 - Family icon selector (2026-10-05, STATE §2.11, D13): `site/js/family/family.js` + `site/css/family.css` put "EXPLORA" and the 4 Cat icons in the header of the **landing page only** (owner's decision: not in the free editor nor the chapters). Ported from JSCat's `family.js` as an ES module, with Josefin Sans self-hosted in `site/fonts/` (no Google Fonts: privacy of minors).
 - Decisions D3, D4, D6–D12: the owner accepted all recommended options (STATE §3).
 - 253 unit tests + static checks + browser checks (editor, panel, every exercise and activity end-to-end, landing progress, export/import, glossary, teacher guide), all green.
-- Still pending from phase 0 (owner's job): confirm Cloudflare Pages deploys
-  `step-quiz/htmlcat`; confirm `/tests/` and `/docs/`
-  return 404 on the deployed site; add custom domain `htmlcat.step-quiz.net`.
+- Phase 0 is closed: Cloudflare Pages deploys `step-quiz/htmlcat` (`main`) at
+  `https://htmlcat.step-quiz.net` (confirmed by the owner, 2026-10-19). The root `404.html` makes
+  `/tests/` and `/docs/` return the error page.
 
 ## 4. Next task: phase 5 — content, one chapter per PR
 
