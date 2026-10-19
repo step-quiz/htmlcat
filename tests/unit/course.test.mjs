@@ -69,3 +69,9 @@ test('progrés: dades malmeses no fan fallar res', () => {
   localStorage.setItem(PREFIX + 'progress', 'no és json');
   assert.equal(isGoalCompleted('cap-1-ex'), false);
 });
+
+test('pageGoals: l\'exercici principal i després les activitats', async () => {
+  const { CAPITOLS, pageGoals } = await import('../../site/js/course/data.js');
+  assert.deepEqual(pageGoals(CAPITOLS[0]), ['cap-1-ex', 'cap-1-bug', 'cap-1-parsons', 'cap-1-quiz']);
+  assert.deepEqual(pageGoals({ goalId: 'repte-1' }), ['repte-1']);
+});

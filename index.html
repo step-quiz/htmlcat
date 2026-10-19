@@ -37,9 +37,21 @@
         </nav>
 
         <h2 id="capitols">Capítols</h2>
-        <p class="botons">
-          <a class="boto" href="site/curs/capitol-1.html">Comença pel capítol 1 →</a>
-        </p>
+        <section class="progres" aria-labelledby="progres-titol">
+          <h3 id="progres-titol" class="visually-hidden">El teu progrés</h3>
+          <p class="progres__resum" data-progres-resum>Encara no has superat cap exercici. Comença pel capítol 1!</p>
+          <progress class="progres__barra" data-progres-barra max="15" value="0" aria-label="Exercicis superats"></progress>
+          <p class="botons">
+            <a class="boto" href="site/curs/capitol-1.html" data-continua>Comença pel capítol 1 →</a>
+            <button class="boto boto--secundari" type="button" data-exporta>📋 Exporta el meu progrés</button>
+            <button class="boto boto--secundari" type="button" data-importa>📥 Importa</button>
+            <input class="visually-hidden" type="file" accept=".json,application/json" data-fitxer tabindex="-1" aria-hidden="true">
+          </p>
+          <p class="progres__ajuda">
+            El progrés i el codi es desen en aquest navegador. Si canvies d'ordinador, exporta'l i torna'l a importar.
+          </p>
+          <p class="progres__missatge" role="status" data-progres-missatge></p>
+        </section>
         <ol class="index-capitols" data-capitols></ol>
         <p class="avis">
           🚧 <strong>Aviat:</strong> els reptes. Mentrestant, l'editor lliure ja ho permet tot.
@@ -72,6 +84,10 @@ h1 {
   padding: 1rem;
   border-left: 4px solid orange;
 }</pre>
+        <p>
+          📖 <a href="site/glossari.html">El glossari del curs</a>: totes les etiquetes, propietats i conceptes, amb una frase cadascun.
+          · 🧑‍🏫 <a href="site/professorat.html">Guia per al professorat</a>.
+        </p>
         <p>
           També pots aprendre a programar amb
           <a href="https://karelcat.step-quiz.net">KarelCat</a> i

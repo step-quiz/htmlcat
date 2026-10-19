@@ -4,8 +4,8 @@ Curs interactiu per aprendre a escriure **HTML i CSS** al navegador, en català,
 i a fer-ho amb **codi net i ben estructurat**. Forma part de la mateixa sèrie que
 [KarelCat](https://karelcat.step-quiz.net) i [PyCat](https://pycat.step-quiz.net).
 
-> **Estat:** en construcció. Ja hi ha els capítols 1 a 14 (HTML i CSS) i l'editor lliure; falten el
-> projecte final i els reptes.
+> **Estat:** en construcció. Ja hi ha els 15 capítols (HTML, CSS i el projecte final), l'editor lliure,
+> el glossari i la [guia per al professorat](site/professorat.html); falten els reptes.
 > L'estat real del projecte és a [`docs/STATE.md`](docs/STATE.md).
 
 ---
@@ -22,6 +22,10 @@ Per això HTMLCat els fa visibles:
 - **⚠ Problemes**: explica en català cada error o hàbit poc net, amb la línia i una pista.
 - **🌳 Arbre**: mostra l'estructura que el navegador ha construït realment amb el teu codi.
 - **✓ Comprovacions**: llista de requisits de cada exercici, amb ✓ o ✗ per a cadascun.
+- **📖 Glossari**: cada etiqueta, propietat i concepte, amb una frase; a cada capítol, només el que ja s'ha vist.
+
+La feina es desa al navegador de l'alumne i enlloc més (sense comptes ni galetes). Per canviar
+d'ordinador, la portada té **📋 Exporta el meu progrés** i **📥 Importa**.
 
 ## Documentació
 

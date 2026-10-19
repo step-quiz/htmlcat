@@ -29,16 +29,21 @@ aquest document (i el codi).
 **Fase actual: 5 (continguts, un capítol per PR).** Fets: els 15 capítols (la part A, HTML, la
 part B, CSS, i el projecte final), amb l'estructura del curs (menú de capítols, progrés), els
 exercicis amb «✓ Comprova», el panell ⚠ Problemes i l'editor lliure a `site/editor/`.
-Següent: els reptes (§6).
+De la fase 6 (2026-10-18/19): problemes de Parsons, qüestionaris, panell 🌳 Arbre i exportar i
+importar el progrés; de la fase 7: la portada amb el progrés, el glossari i la guia del
+professorat. Següent: els reptes (§6).
 
 ```
 README.md              Presentació del projecte (per a persones)
-index.html             Portada (pantalla de benvinguda): Capítols i Editor lliure, la llista de
-                       capítols (de course/data.js, amb ✓) i dos exemples ressaltats (fa servir site/)
+index.html             Portada (pantalla de benvinguda): Capítols i Editor lliure, el progrés
+                       (resum, barra, «Continua», Exporta / Importa), la llista de capítols amb
+                       l'estat de cadascun (de course/data.js) i dos exemples ressaltats (fa servir site/)
 CLAUDE.md              Normes per a les IA que hi treballin
 LICENSE                Text de les dues llicències (CC BY-NC-SA 4.0 i MIT)
 LLICENCIA.md           Explicació de la llicència en català
 .editorconfig          UTF-8, LF, 2 espais
+404.html               Pàgina d'error: Cloudflare la fa servir sola (ha de ser a l'arrel, §5)
+_headers               Capçaleres de seguretat per a Cloudflare Pages (ha de ser a l'arrel, §5)
 .gitignore             node_modules/
 .github/workflows/ci.yml  Executa tots els tests a cada push i PR
 
@@ -66,8 +71,11 @@ site/                  ← el web (es publica tot el repositori: vegeu §5)
   curs/capitol-15.html Capítol 15, «Projecte final» (exercicis cap-15-ex i cap-15-bug; cap regla nova)
   editor/index.html    Editor lliure (simulador a pantalla completa, clau code:editor; botons
                        ⟲ Codi inicial, Obre i Desa)
-  404.html             Pàgina d'error (Cloudflare la fa servir sola)
-  _headers             Capçaleres de seguretat per a Cloudflare Pages
+  glossari.html        Tot el vocabulari del curs, amb el capítol de cada terme i un camp per filtrar (§2.12)
+  professorat.html     Guia per al professorat: com és el curs, com es corregeix, on es desa la feina,
+                       seguiment a classe i la taula dels capítols (de course/data.js)
+  404.html             Còpia antiga de la pàgina d'error (la bona és la de l'arrel)
+  _headers             Còpia de l'_headers de l'arrel (aquí Cloudflare no el llegeix)
   LICENSE.txt          Còpia de LICENSE (el peu hi enllaça)
   recursos/            Paquet d'imatges per als alumnes (gat.svg, animals/, paisatges/) + CREDITS.md
   img/logo.svg         Logotip (també és la icona de la pestanya)
@@ -117,10 +125,15 @@ site/                  ← el web (es publica tot el repositori: vegeu §5)
   js/checks/checks.js        Avalua les comprovacions sobre el DOM i el codi font (§2.7)
   js/course/data.js          Mòdul pur: capítols i reptes; ordre del curs (§2.8)
   js/course/progress.js      Exercicis superats, al navegador (§2.5)
+  js/course/backup.js        Mòdul pur: exportar i importar el progrés i el codi en un fitxer JSON (§2.5)
+  js/course/vocabulary.js    Mòdul pur: el vocabulari del curs (terme, tipus, capítol, definició; §2.12)
+  js/course/glossary.js      Glossari: botó de la barra, finestra <dialog> i llista filtrable (§2.12)
   js/course/shell.js         Barra, menú de capítols amb ✓, anterior/següent i peu (§2.8)
   js/family/family.js        Selector de la família Cat: mountFamily(host) i CAT_PROJECTS (§2.11)
   js/pages/course-page.js    Punt d'entrada dels capítols i reptes (muntatge mandrós)
-  js/pages/landing-page.js   Punt d'entrada de la portada (ressalta els exemples)
+  js/pages/landing-page.js   Punt d'entrada de la portada (exemples, progrés, exportar i importar)
+  js/pages/glossary-page.js  Punt d'entrada de glossari.html
+  js/pages/teacher-page.js   Punt d'entrada de professorat.html (la taula dels capítols)
   js/pages/editor-page.js    Punt d'entrada de l'editor lliure
 
 tests/
@@ -271,6 +284,21 @@ Safari de l'iPhone no faci zoom.
 | `htmlcat:v1:progress` | `{ goals: { '<goal-id>': <moment de la primera vegada que es va superar> } }` |
 
 Si el navegador no deixa desar, el simulador ho avisa una vegada.
+
+**Exportar i importar** (`course/backup.js`, botons de la portada; BLUEPRINT §4.12). Els
+ordinadors de l'escola són compartits i s'esborren: «📋 Exporta el meu progrés» baixa
+`htmlcat-progres-AAAA-MM-DD.json`:
+
+```json
+{ "format": "htmlcat-progres", "versio": 1, "exportat": "2026-10-19T…",
+  "dades": { "progress": { "goals": { … } }, "code:c01-exercici": { "files": { … }, "savedAt": … } } }
+```
+
+«📥 Importa» el llegeix, diu què porta i, si l'alumne hi està d'acord, **ho afegeix** al que hi
+ha: els objectius se sumen (es queda la data més antiga) i, de cada codi, el més recent
+(`savedAt`). No s'esborra mai res. Només s'accepten `progress` i `code:<id>` amb la forma
+esperada (la resta s'ignora i es compta); un fitxer que no és d'HTMLCat, d'una altra versió o de
+més de 5 MB es rebutja amb un missatge.
 
 ### 2.6 Revisor de codi: `lintStatic({ files, mode, chapter, env })`
 
@@ -472,7 +500,15 @@ els de `base.css` (`.avis`, `.boto`). Cap `style=""`.
 
 `course/data.js` és la font única de l'estructura: `CAPITOLS` i `REPTES` només
 contenen pàgines que existeixen (ho comprova el test estàtic), i la portada hi
-genera la llista de capítols.
+genera la llista de capítols. Cada capítol porta també `activitats`: els altres
+`data-goal-id` de la pàgina («Troba l'error», Parsons, qüestionari), que la portada
+compta; el test estàtic comprova que coincideixen exactament amb la pàgina
+(`pageGoals(page)` = l'exercici principal i les activitats).
+
+La barra dels capítols porta el botó **📖 Glossari** (§2.12). La **portada** ensenya el
+resum del progrés (exercicis i activitats superats, una barra `<progress>`), el botó
+«Continua» (porta al primer capítol sense superar) i, per a cada capítol, si l'exercici
+està superat i quantes activitats s'han fet.
 
 ### 2.10 Activitats: problemes de Parsons i qüestionaris (`js/activities/`)
 
@@ -534,6 +570,18 @@ Origen: «Cat family icon selector», fet a JSCat (`FAMILY-ICONS-HANDOFF.md`) i 
 - Tipografia: Josefin Sans 600 (OFL), servida des de `site/fonts/` (D7, privacitat: cap
   Google Fonts). `htmlcat.svg` és el mateix fitxer que `img/logo.svg` (un test ho comprova).
 - **No verificat:** Safari, Firefox, mòbil real, i el ritme del «shake-and-blink» a ull.
+
+### 2.12 Glossari (`course/vocabulary.js`, `course/glossary.js`)
+
+`VOCABULARI` té cada etiqueta, atribut, propietat CSS, valor i concepte del curs:
+`{ terme, tipus, capitol, def }`, amb el capítol on s'ensenya per primera vegada i una
+definició d'una frase (BLUEPRINT §4.11). A cada capítol, el botó de la barra obre un `<dialog>`
+amb el que s'ha vist fins allà (`vocabularyUntil(capitol)`; per a un repte, el seu
+`afterChapter`), agrupat per tipus i amb un camp que filtra (sense accents ni majúscules); Esc o
+un clic fora el tanquen. `site/glossari.html` ho mostra tot, amb el capítol de cada terme. Un
+test unitari comprova que cada entrada té un tipus conegut, un capítol que existeix i una
+definició acabada, sense repeticions. Quan un capítol ensenyi alguna cosa nova, afegiu-la aquí.
+L'autocompletat de l'editor (BLUEPRINT §4.11) encara no hi és.
 
 ---
 
@@ -612,9 +660,9 @@ cd tests && npm ci && node course-browser.mjs   # navegador (Playwright + Chromi
 
 | Test | Què comprova |
 |---|---|
-| `unit/` | Cada mòdul pur de `site/js/` (241 tests): tokenitzador, arbre i errors d'estructura, analitzador de CSS, colors del CSS (cada sintaxi i el contrast), ressaltat (conserva el codi, escapa, una línia per entrada, rendiment), robustesa amb 500 codis aleatoris (també el revisor), edició (Retorn, Tab, Maj+Tab), `localStorage`, document de previsualització, textos de la interfície i revisor de codi: per a cada regla, un codi que la dispara i un que no (un test falla si una regla no en té), missatges sense buits, activació per capítol i mode, ordre, agrupació, rendiment, i que el codi d'exemple de l'editor lliure i de la portada no tingui cap problema; dades del curs i progrés; dades del selector de la família Cat (4 projectes, adreces, icones, tipografia sense tercers); esquema de les comprovacions i les que no necessiten navegador (`uses-html`, `uses-css`, `lint`; `layout`, amb caixes de mentida); Parsons (solució, barreja repetible que mai no surt ordenada, correcció amb línies iguals intercanviables); elements afegits pel navegador al panell 🌳 Arbre (taula sense `<tbody>`, `<b><i>…</b>…</i>`, document sense `<head>`, `</p>` solt) |
-| `course-static.mjs` | Cada pàgina (també la portada, a l'arrel) té `<!DOCTYPE html>`, `lang="ca"`, `charset` i `<title>`; cap `style=""` ni `on…=""`; cap tabulació; tots els enllaços relatius existeixen; sintaxi de cada `.js`; cap menció de CC BY-NC-ND; existeixen `.editorconfig`, `.gitignore` i `.github/workflows/ci.yml` (una pujada pel web no els inclou). Curs: dades (`course/data.js`) ↔ fitxers de `site/curs/`; `<body data-pagina data-num>` d'acord amb el fitxer; l'exercici principal de cada capítol hi és; tot simulador editable té `data-id`; `data-id` i `data-goal-id` únics; blocs de codi amb nom permès i sense `<script`; comprovacions vàlides (`checks/schema.js`); cada exercici té la seva solució a `tests/solutions/`. Activitats (§2.10): cada Parsons té el `<pre class="parsons-codi">` amb almenys tres línies diferents i indentat amb múltiples de 2 espais; cada pregunta té `data-correcta` dins de les opcions (almenys dues) i explicació; cap `data-goal-id` repetit, tampoc entre activitats i exercicis. Imatges: la llista de `preview/recursos.js`, els fitxers de `site/recursos/` i les files de `CREDITS.md` coincideixen |
-| `course-browser.mjs` | Serveix el repositori sencer, com el web publicat. La portada (arrel) i cada pàgina de `site/` (no `404.html`, que el web publicat no fa servir, ni `index.html`, que només porta a la portada: es comprova que hi porta), a 360 i 1280 px: cap error a la consola, cap petició fallida, cap petició a servidors externs, tots els simuladors es munten en arribar-hi, cap desplaçament horitzontal, cap id repetit; a cada simulador, les imatges que el navegador no pot mostrar són tantes com les que el panell ⚠ Problemes diu que no es troben (`html/image-not-found`), i només n'hi pot haver als exemples no editables i als exercicis (les peticions d'aquestes imatges, un 404 a `recursos/` o una imatge d'Internet que bloqueja la CSP, no compten com a errors de la pàgina). Cada exercici dels capítols, en un mòbil: el codi inicial no el supera, la solució sí (i sense errors al panell ⚠ Problemes), el menú hi posa ✓ i es manté després de recarregar. Dos exemples no editables a la mateixa pàgina no repeteixen els ids de les pestanyes. Activitats de cada capítol, en un mòbil i només amb els botons: comprovar sense fer res dona error; resoltes (al qüestionari, primer una opció dolenta), es desen, no marquen el capítol al menú i, en recarregar, diuen que ja estaven fetes. Panell 🌳 Arbre (capítol 7): només el `<tbody>` surt com a afegit, el ratolí marca l'element al resultat i el treu en sortir, el sandbox no canvia i, amb `<b><i>…</b>…</i>`, la segona `<i>` surt com a afegida. Selector de la família Cat (`checkFamily`, només a la portada): 4 icones, la d'HTMLCat no és enllaç, les altres tres tenen `https://*.step-quiz.net`, `_blank` i `noopener`, icones carregades, centrat a 1280 px, Josefin Sans carregada, ratolí (creix 1,9×, les altres 0,8×, el text diu PyCat, torna al repòs) i Tab; visible en mòbil; l'editor i els capítols no en tenen. A més, prova l'editor lliure de punta a punta: escriure, indentació automàtica, resultat en directe, Ctrl+Z, `sandbox` i CSP correctes (també amb text abans de `<html>`), cap script ni imatge externa, enllaços interceptats, un formulari amb `action` cap a un altre web que no envia res i mostra les dades a sota, CSS aplicat i codi desat després de recarregar. I el panell ⚠ Problemes: «Cap problema» amb el codi inicial, el `<p>` del codi inicial sense tancar surt amb la seva línia i es marca, el clic i el teclat porten el cursor a la línia (i canvien de pestanya), i una propietat CSS mal escrita es detecta amb el `CSS.supports` del navegador |
+| `unit/` | Cada mòdul pur de `site/js/` (253 tests): tokenitzador, arbre i errors d'estructura, analitzador de CSS, colors del CSS (cada sintaxi i el contrast), ressaltat (conserva el codi, escapa, una línia per entrada, rendiment), robustesa amb 500 codis aleatoris (també el revisor), edició (Retorn, Tab, Maj+Tab), `localStorage`, document de previsualització, textos de la interfície i revisor de codi: per a cada regla, un codi que la dispara i un que no (un test falla si una regla no en té), missatges sense buits, activació per capítol i mode, ordre, agrupació, rendiment, i que el codi d'exemple de l'editor lliure i de la portada no tingui cap problema; dades del curs i progrés; dades del selector de la família Cat (4 projectes, adreces, icones, tipografia sense tercers); esquema de les comprovacions i les que no necessiten navegador (`uses-html`, `uses-css`, `lint`; `layout`, amb caixes de mentida); Parsons (solució, barreja repetible que mai no surt ordenada, correcció amb línies iguals intercanviables); elements afegits pel navegador al panell 🌳 Arbre (taula sense `<tbody>`, `<b><i>…</b>…</i>`, document sense `<head>`, `</p>` solt); exportar i importar el progrés (què s'exporta, fitxers rebutjats, entrades estranyes ignorades, suma d'objectius amb la data més antiga, de cada codi el més nou, res no s'esborra); vocabulari del glossari (tipus, capítol existent, definició acabada, sense repeticions, filtre per capítol i ordre) |
+| `course-static.mjs` | Cada pàgina (també la portada, a l'arrel) té `<!DOCTYPE html>`, `lang="ca"`, `charset` i `<title>`; cap `style=""` ni `on…=""`; cap tabulació; tots els enllaços relatius existeixen; sintaxi de cada `.js`; cap menció de CC BY-NC-ND; existeixen `.editorconfig`, `.gitignore` i `.github/workflows/ci.yml` (una pujada pel web no els inclou). Curs: dades (`course/data.js`) ↔ fitxers de `site/curs/`; `<body data-pagina data-num>` d'acord amb el fitxer; l'exercici principal de cada capítol hi és, i els `data-goal-id` de la pàgina són exactament els de `course/data.js` (exercici i `activitats`); tot simulador editable té `data-id`; `data-id` i `data-goal-id` únics; blocs de codi amb nom permès i sense `<script`; comprovacions vàlides (`checks/schema.js`); cada exercici té la seva solució a `tests/solutions/`. Activitats (§2.10): cada Parsons té el `<pre class="parsons-codi">` amb almenys tres línies diferents i indentat amb múltiples de 2 espais; cada pregunta té `data-correcta` dins de les opcions (almenys dues) i explicació; cap `data-goal-id` repetit, tampoc entre activitats i exercicis. Imatges: la llista de `preview/recursos.js`, els fitxers de `site/recursos/` i les files de `CREDITS.md` coincideixen |
+| `course-browser.mjs` | Serveix el repositori sencer, com el web publicat. La portada (arrel) i cada pàgina de `site/` (no `404.html`, que el web publicat no fa servir, ni `index.html`, que només porta a la portada: es comprova que hi porta), a 360 i 1280 px: cap error a la consola, cap petició fallida, cap petició a servidors externs, tots els simuladors es munten en arribar-hi, cap desplaçament horitzontal, cap id repetit; a cada simulador, les imatges que el navegador no pot mostrar són tantes com les que el panell ⚠ Problemes diu que no es troben (`html/image-not-found`), i només n'hi pot haver als exemples no editables i als exercicis (les peticions d'aquestes imatges, un 404 a `recursos/` o una imatge d'Internet que bloqueja la CSP, no compten com a errors de la pàgina). Cada exercici dels capítols, en un mòbil: el codi inicial no el supera, la solució sí (i sense errors al panell ⚠ Problemes), el menú hi posa ✓ i es manté després de recarregar. Dos exemples no editables a la mateixa pàgina no repeteixen els ids de les pestanyes. Activitats de cada capítol, en un mòbil i només amb els botons: comprovar sense fer res dona error; resoltes (al qüestionari, primer una opció dolenta), es desen, no marquen el capítol al menú i, en recarregar, diuen que ja estaven fetes. Panell 🌳 Arbre (capítol 7): només el `<tbody>` surt com a afegit, el ratolí marca l'element al resultat i el treu en sortir, el sandbox no canvia i, amb `<b><i>…</b>…</i>`, la segona `<i>` surt com a afegida. Portada (`checkLandingProgress`): resum, capítols fets i «Continua» a partir d'un progrés desat; «Exporta» baixa un fitxer amb el progrés i el codi; importat en un navegador buit, el progrés torna i la llista es posa al dia; un fitxer que no és d'HTMLCat dona un avís. Glossari (`checkGlossary`, capítol 3 en mòbil): el botó es veu i obre la finestra, hi ha `<li>` però no `<a>`, el filtre funciona, Esc tanca; `glossari.html` ho té tot. Guia del professorat: la taula té els 15 capítols i les activitats. Selector de la família Cat (`checkFamily`, només a la portada): 4 icones, la d'HTMLCat no és enllaç, les altres tres tenen `https://*.step-quiz.net`, `_blank` i `noopener`, icones carregades, centrat a 1280 px, Josefin Sans carregada, ratolí (creix 1,9×, les altres 0,8×, el text diu PyCat, torna al repòs) i Tab; visible en mòbil; l'editor i els capítols no en tenen. A més, prova l'editor lliure de punta a punta: escriure, indentació automàtica, resultat en directe, Ctrl+Z, `sandbox` i CSP correctes (també amb text abans de `<html>`), cap script ni imatge externa, enllaços interceptats, un formulari amb `action` cap a un altre web que no envia res i mostra les dades a sota, CSS aplicat i codi desat després de recarregar. I el panell ⚠ Problemes: «Cap problema» amb el codi inicial, el `<p>` del codi inicial sense tancar surt amb la seva línia i es marca, el clic i el teclat porten el cursor a la línia (i canvien de pestanya), i una propietat CSS mal escrita es detecta amb el `CSS.supports` del navegador |
 | `.github/comprova-enllacos.py` | Els enllaços cap als altres webs de Step Quiz (`https://*.step-quiz.net`, p. ex. el selector de la família Cat) responen sense error. No és a `tests/` perquè visita Internet: l'executa el workflow `enllacos.yml` a cada canvi a `main`, cada dilluns i a mà |
 
 La GitHub Action `.github/workflows/ci.yml` executa els tres a cada push i a
@@ -637,8 +685,13 @@ repositori és la portada (Capítols i Editor lliure); l'editor lliure és
 portada. El web publica l'arrel del repositori: tot el que s'hi puja és públic
 (també `tests/solutions/` i `docs/`). Mai no s'hi han de posar dades privades.
 
-`site/_headers` afegeix `X-Content-Type-Options`, `Referrer-Policy` i
-`Permissions-Policy`. **No** s'hi han de posar COOP/COEP (BLUEPRINT §3.2, A15)
+`_headers` afegeix `X-Content-Type-Options`, `Referrer-Policy` i
+`Permissions-Policy`. **Ha de ser a l'arrel**, igual que `404.html` (2026-10-19): Cloudflare
+només llegeix tots dos fitxers a la carpeta que publica, i des que es publica l'arrel els de
+`site/` no feien res. Sense `404.html` a l'arrel, Cloudflare tracta el web com una aplicació
+d'una sola pàgina i respon qualsevol adreça inexistent (també `/tests/` i `/docs/`) amb la
+portada i un codi 200. El test estàtic comprova que hi siguin. Els fitxers de dins de `tests/`
+i `docs/` sí que es poden obrir (es publica tot el repositori), però les carpetes no es llisten. **No** s'hi han de posar COOP/COEP (BLUEPRINT §3.2, A15)
 ni capçaleres de memòria cau llarga.
 
 ---
@@ -677,6 +730,10 @@ Fases del BLUEPRINT §9.1:
       miren l'estructura, no el text. Des del capítol 6, els exercicis són documents sencers (D3). Al 7, els
       simuladors porten un `estils.css` de només lectura perquè es vegin les vores de les taules
       (el CSS s'ensenya a la part B). Següent: els 12 reptes (`CURRICULUM.md` §2).
-- [ ] **Fase 6 — Activitats i eines:** fets (2026-10-18) els problemes de Parsons i els qüestionaris (§2.10)
-      i el panell 🌳 Arbre (§2.4, amb els elements afegits pel navegador). Falta: les correccions ràpides (D4).
-- [ ] **Fase 7 — Acabats:** portada amb progrés, glossari, accessibilitat, guia del professorat.
+- [ ] **Fase 6 — Activitats i eines:** fets (2026-10-18) els problemes de Parsons i els qüestionaris (§2.10),
+      el panell 🌳 Arbre (§2.4, amb els elements afegits pel navegador) i (2026-10-19) exportar i importar
+      el progrés (§2.5). Falta: les correccions ràpides (D4).
+- [ ] **Fase 7 — Acabats:** fets (2026-10-19) la portada amb el progrés (§2.8), el glossari (§2.12), la guia
+      del professorat (`site/professorat.html`) i una auditoria d'accessibilitat (axe-core, WCAG 2.1 AA:
+      `step-quiz-commons/docs/auditoria-accessibilitat-2026-10.md`; aquí només calia el focus de l'editor).
+      Falta: descarregar en ZIP des de l'editor lliure i l'autocompletat amb el vocabulari.

@@ -47,7 +47,7 @@ import { join, dirname, relative, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
 import { buildSourceTree } from '../site/js/lang/html-model.js';
-import { CAPITOLS, REPTES, findPage } from '../site/js/course/data.js';
+import { CAPITOLS, REPTES, findPage, pageGoals } from '../site/js/course/data.js';
 import { validateChecks } from '../site/js/checks/schema.js';
 import { RULES } from '../site/js/lint/lint.js';
 import { RECURSOS } from '../site/js/preview/recursos.js';
@@ -90,7 +90,8 @@ function checkUrl(file, url) {
   if (!url || /^(?:[a-z][a-z0-9+.-]*:|#|\/\/)/i.test(url)) return;   // externs, àncores, data:
   const path = url.split(/[?#]/)[0];
   if (!path) return;
-  const target = path.startsWith('/') ? join(SITE, path) : join(dirname(file), path);
+  // Es publica l'arrel del repositori (docs/STATE.md §5): «/…» és des de l'arrel, no des de site/
+  const target = path.startsWith('/') ? join(ROOT, path) : join(dirname(file), path);
   const exists = existsSync(target) &&
     (statSync(target).isFile() || existsSync(join(target, 'index.html')));
   if (!exists) report(file, `l'enllaç «${url}» no apunta a cap fitxer`);
@@ -184,6 +185,14 @@ for (const file of siteFiles.filter((f) => extname(f) === '.html')) {
     } else {
       const page = findPage(match[1], Number(match[2]));
       if (page && !html.includes(`data-goal-id="${page.goalId}"`)) report(file, `falta l'exercici principal (data-goal-id="${page.goalId}")`);
+      if (page) {
+        // La portada compta les activitats de course/data.js: han de ser exactament les de la pàgina
+        const inPage = [...html.matchAll(/data-goal-id="([^"]+)"/g)].map((m) => m[1]).sort();
+        const expected = pageGoals(page).slice().sort();
+        if (inPage.join() !== expected.join()) {
+          report(file, `els data-goal-id de la pàgina (${inPage.join(', ')}) no coincideixen amb course/data.js (${expected.join(', ')}): posa al dia «activitats»`);
+        }
+      }
     }
   }
 
@@ -266,6 +275,16 @@ const credits = readFileSync(join(RECURSOS_DIR, 'CREDITS.md'), 'utf8');
 for (const name of images.filter((n) => !listed.includes(n))) report(join(RECURSOS_DIR, name), 'no és a site/js/preview/recursos.js (afegeix-la a RECURSOS)');
 for (const name of listed.filter((n) => !images.includes(n))) report(join(RECURSOS_DIR, name), 'és a site/js/preview/recursos.js però el fitxer no existeix');
 for (const name of images.filter((n) => !credits.includes('`' + n + '`'))) report(join(RECURSOS_DIR, name), 'falta la seva fila a site/recursos/CREDITS.md');
+
+// ── 404.html i _headers a l'arrel ──
+// Cloudflare Pages només els llegeix a la carpeta que publica, que és l'arrel. Sense
+// 404.html a l'arrel, tracta el web com una aplicació d'una sola pàgina i respon
+// qualsevol adreça inexistent (també /tests/ i /docs/) amb la portada i un 200.
+for (const name of ['404.html', '_headers']) {
+  if (!existsSync(join(ROOT, name))) problems.push(`falta ${name} a l'arrel del repositori (Cloudflare només el llegeix allà)`);
+}
+const rootNotFound = join(ROOT, '404.html');
+if (existsSync(rootNotFound)) checkHtml(rootNotFound, readFileSync(rootNotFound, 'utf8'));
 
 // ── index.html de l'arrel (el simulador, com a PyCat: docs/STATE.md §3) ──
 const rootIndex = join(ROOT, 'index.html');

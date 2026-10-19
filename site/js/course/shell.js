@@ -5,7 +5,8 @@
 //   <body data-pagina="capitol" data-num="1">
 // (docs/BLUEPRINT.md §5.1). Aquest mòdul hi afegeix la barra superior, el
 // menú de capítols (amb ✓ als superats; plegable al mòbil), els enllaços
-// «anterior / següent» i el peu, tot calculat de course/data.js.
+// «anterior / següent», el botó del glossari (course/glossary.js) i el peu,
+// tot calculat de course/data.js.
 // Mai no es fa servir l'adreça de la pàgina per saber on som (A9).
 //
 // API pública:
@@ -14,6 +15,7 @@
 
 import { PARTS, courseSequence, findPage, neighbours } from './data.js';
 import { completedGoals, onProgress } from './progress.js';
+import { createGlossaryButton } from './glossary.js';
 import { t } from '../i18n/ca.js';
 
 const SITE = new URL('../../', import.meta.url);
@@ -37,7 +39,7 @@ function link(className, href, text) {
   return a;
 }
 
-function createBar(menu) {
+function createBar(menu, current) {
   const bar = el('header', 'course-bar');
   const logo = link('logo logo--petit', HOME, '');
   const img = el('img');
@@ -55,7 +57,8 @@ function createBar(menu) {
     menu.classList.toggle('course-menu--open', open);
   });
 
-  bar.append(logo, toggle, link('course-bar__link', new URL('editor/', SITE).href, t('course.editor')));
+  bar.append(logo, toggle, createGlossaryButton(current.chapter),
+    link('course-bar__link', new URL('editor/', SITE).href, t('course.editor')));
   return bar;
 }
 
@@ -136,6 +139,6 @@ export function initCoursePage() {
   document.body.prepend(layout);
   body.append(menu, main);
   main.append(createNeighbourLinks(current));
-  layout.append(createBar(menu), body, createFooter());
+  layout.append(createBar(menu, current), body, createFooter());
   return current;
 }

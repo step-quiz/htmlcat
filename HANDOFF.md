@@ -1,6 +1,6 @@
 # HANDOFF — start here (for a Claude session with no prior context)
 
-Last updated: 2026-10-18, after chapter 15 (phase 5, content): all 15 chapters are done (parts A and B and the final project); the challenges are next.
+Last updated: 2026-10-19: all 15 chapters are done; phase 6 (Parsons, quizzes, 🌳 tree, progress export/import) and most of phase 7 (landing progress, glossary, teacher guide) are done; the challenges are next.
 Keep it short and current: when you finish a phase, rewrite the "Where we are" and
 "Next task" sections.
 
@@ -96,9 +96,20 @@ dropped every dot-file (see §6).
   Next: the 12 challenges (`docs/CURRICULUM.md` §2,
   each with `afterChapter`; `REPTES` in `course/data.js` is still empty, and the course shell
   already supports `repte-N.html` pages: STATE §2.8).
+- Phase 6 (2026-10-18/19): Parsons problems and quizzes (`site/js/activities/`, STATE §2.10), the
+  🌳 tree panel (`sim/tree-panel.js`, `sim/tree-model.js`) and progress **export/import**
+  (`course/backup.js`, buttons on the landing page, STATE §2.5: a JSON file; importing merges, never deletes).
+  Still missing: quick-fixes (D4).
+- Phase 7 (2026-10-19): the landing page shows progress (summary, `<progress>`, «Continua», per-chapter
+  state; each chapter in `course/data.js` lists its `activitats`, checked against the page by the static
+  test), the **glossary** (`course/vocabulary.js` + `course/glossary.js`: «📖 Glossari» in the course bar,
+  filtered to the current chapter; `site/glossari.html` with everything; STATE §2.12; when a chapter teaches
+  something new, add it to `VOCABULARI`) and the **teacher guide** (`site/professorat.html`). An axe-core
+  audit (WCAG 2.1 AA) found only the editor's missing focus ring, now fixed. Still missing: ZIP download in the
+  free editor, autocomplete from the vocabulary.
 - Family icon selector (2026-10-05, STATE §2.11, D13): `site/js/family/family.js` + `site/css/family.css` put "EXPLORA" and the 4 Cat icons in the header of the **landing page only** (owner's decision: not in the free editor nor the chapters). Ported from JSCat's `family.js` as an ES module, with Josefin Sans self-hosted in `site/fonts/` (no Google Fonts: privacy of minors).
 - Decisions D3, D4, D6–D12: the owner accepted all recommended options (STATE §3).
-- 233 unit tests + static checks + browser checks (editor, panel and every exercise end-to-end), all green.
+- 253 unit tests + static checks + browser checks (editor, panel, every exercise and activity end-to-end, landing progress, export/import, glossary, teacher guide), all green.
 - Still pending from phase 0 (owner's job): confirm Cloudflare Pages deploys
   `step-quiz/htmlcat`; confirm `/tests/` and `/docs/`
   return 404 on the deployed site; add custom domain `htmlcat.step-quiz.net`.
@@ -120,8 +131,7 @@ Follow BLUEPRINT §9.3 (per-chapter workflow) and §5.5 (content rules); read
 4. Chapters 2–5: fragment mode; from chapter 6, full documents (D3).
 5. Update `docs/CURRICULUM.md` (status) and STATE; proofread the Catalan.
 
-Still open: vocabulary/glossary/autocomplete,
-progress export/import (phase 6).
+Still open: autocomplete from the vocabulary, quick-fixes (phase 6), ZIP download in the free editor (phase 7).
 
 ## 5. How to work (owner's rules — see also CLAUDE.md)
 

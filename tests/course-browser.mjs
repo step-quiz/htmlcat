@@ -199,6 +199,9 @@ await checkFreeEditorRestore();
 await checkOldLanding();
 await checkFamily();
 await checkTree();
+await checkLandingProgress();
+await checkGlossary();
+await checkTeacherGuide();
 for (const file of listPages(join(SITE, 'curs'))) {
   const html = readFileSync(file, 'utf8');
   for (const [, goal] of html.matchAll(/<div class="simulador"[^>]*data-goal-id="([^"]+)"/g)) await checkExercise(file, goal);
@@ -709,5 +712,92 @@ async function checkTree() {
   await page.waitForFunction(() => document.querySelector('.sim-tree-panel .sim-tree__node--afegit .sim-tree__tag')?.textContent === '<i>', null, { timeout: 3000 })
     .catch(() => fail('amb <b><i>…</b>…</i>, la segona <i> hauria de sortir com a afegida'));
   await page.evaluate(() => localStorage.clear());
+  await page.close();
+}
+
+/**
+ * La portada: el resum del progrés i la llista de capítols surten de
+ * course/data.js i del progrés desat; «Exporta» baixa un fitxer amb el
+ * progrés i el codi, i «Importa» el torna a posar en un navegador buit.
+ */
+async function checkLandingProgress() {
+  const where = 'portada (progrés, exportar i importar)';
+  const fail = (msg) => problems.push(`${where}: ${msg}`);
+  const context = await browser.newContext({ viewport: { width: 1280, height: 800 }, acceptDownloads: true });
+  const page = await context.newPage();
+  page.on('pageerror', (err) => fail(`excepció: ${err.message}`));
+  page.on('dialog', (dialog) => dialog.accept());
+  await page.goto(origin + '/index.html', { waitUntil: 'networkidle' });
+  await page.evaluate(() => {
+    localStorage.setItem('htmlcat:v1:progress', JSON.stringify({ goals: { 'cap-1-ex': 1, 'cap-1-quiz': 2, 'cap-2-ex': 3 } }));
+    localStorage.setItem('htmlcat:v1:code:c01-exercici', JSON.stringify({ files: { 'index.html': '<p>meu</p>' }, savedAt: 9 }));
+  });
+  await page.reload({ waitUntil: 'networkidle' });
+  const summary = await page.locator('[data-progres-resum]').innerText();
+  if (!/Has superat 2 de 15 exercicis i 1 de \d+ activitats/.test(summary)) fail(`resum inesperat: «${summary}»`);
+  if (await page.locator('.index-capitols__item').count() !== 15) fail('la llista hauria de tenir els 15 capítols');
+  if (await page.locator('.index-capitols__item--fet').count() !== 2) fail('hi hauria d\'haver 2 capítols marcats com a fets');
+  const next = await page.locator('[data-continua]').innerText();
+  if (!next.includes('Capítol 3')) fail(`«Continua» hauria de portar al capítol 3 i diu «${next}»`);
+
+  const [download] = await Promise.all([page.waitForEvent('download'), page.locator('[data-exporta]').click()]);
+  if (!/^htmlcat-progres-\d{4}-\d\d-\d\d\.json$/.test(download.suggestedFilename())) fail(`nom del fitxer: ${download.suggestedFilename()}`);
+  const path = await download.path();
+  const file = JSON.parse(readFileSync(path, 'utf8'));
+  if (file.format !== 'htmlcat-progres' || !file.dades['code:c01-exercici'] || !file.dades.progress) fail('el fitxer exportat no porta el progrés i el codi');
+
+  // Un navegador «nou»: importar-hi el fitxer
+  await page.evaluate(() => localStorage.clear());
+  await page.reload({ waitUntil: 'networkidle' });
+  await page.locator('[data-fitxer]').setInputFiles(path);
+  await page.locator('[data-progres-missatge]').filter({ hasText: 'Importat' }).waitFor({ timeout: 3000 })
+    .catch(() => fail('importar no diu que ha importat'));
+  const after = await page.evaluate(() => JSON.parse(localStorage.getItem('htmlcat:v1:progress')));
+  if (Object.keys(after?.goals || {}).length !== 3) fail('després d\'importar, hi hauria d\'haver els 3 objectius');
+  if (await page.locator('.index-capitols__item--fet').count() !== 2) fail('després d\'importar, la llista no s\'ha posat al dia');
+  // Un fitxer que no és d'HTMLCat no toca res
+  await page.locator('[data-fitxer]').setInputFiles({ name: 'altre.json', mimeType: 'application/json', buffer: Buffer.from('{"a":1}') });
+  await page.locator('[data-progres-missatge]').filter({ hasText: 'no és un fitxer de progrés' }).waitFor({ timeout: 3000 })
+    .catch(() => fail('un fitxer que no és d\'HTMLCat hauria de donar un avís'));
+  await page.evaluate(() => localStorage.clear());
+  await context.close();
+}
+
+/**
+ * El glossari: el botó de la barra d'un capítol obre una finestra amb el
+ * que ja s'ha ensenyat (al capítol 3, <li> sí i <a> encara no); el camp
+ * filtra; Esc la tanca. La pàgina glossari.html ho té tot.
+ */
+async function checkGlossary() {
+  const where = 'glossari';
+  const fail = (msg) => problems.push(`${where}: ${msg}`);
+  const page = await browser.newPage({ viewport: { width: 360, height: 740 } });
+  page.on('pageerror', (err) => fail(`excepció: ${err.message}`));
+  await page.goto(urlOf(join(SITE, 'curs', 'capitol-3.html')), { waitUntil: 'networkidle' });
+  const button = page.getByRole('button', { name: 'Glossari' });
+  if (!await button.isVisible()) fail('el botó del glossari no es veu al mòbil');
+  await button.click();
+  const dialog = page.locator('dialog.glossari-finestra');
+  if (!await dialog.isVisible()) fail('el botó no obre la finestra');
+  const terms = await dialog.locator('.glossari__terme code').allInnerTexts();
+  if (!terms.includes('<li>')) fail('al capítol 3 hi hauria de sortir <li>');
+  if (terms.includes('<a>')) fail('al capítol 3 encara no hi ha de sortir <a> (és del 4)');
+  await dialog.locator('input').fill('llista');
+  const visible = await dialog.locator('.glossari__entrada:not([hidden]) .glossari__terme code').allInnerTexts();
+  if (!visible.length || visible.includes('<p>')) fail(`el filtre «llista» no filtra bé (${visible.join(', ')})`);
+  await page.keyboard.press('Escape');
+  if (await dialog.isVisible()) fail('Esc no tanca la finestra');
+  await page.goto(urlOf(join(SITE, 'glossari.html')), { waitUntil: 'networkidle' });
+  if (await page.locator('.glossari__entrada').count() < 100) fail('glossari.html hauria de tenir tot el vocabulari');
+  await page.close();
+}
+
+/** La guia del professorat: la taula dels capítols surt de course/data.js. */
+async function checkTeacherGuide() {
+  const page = await browser.newPage();
+  await page.goto(urlOf(join(SITE, 'professorat.html')), { waitUntil: 'networkidle' });
+  const rows = await page.locator('[data-taula-curs] tbody tr').count();
+  if (rows !== 15) problems.push(`professorat.html: la taula hauria de tenir 15 capítols i en té ${rows}`);
+  if (!(await page.locator('[data-taula-curs]').innerText()).includes('cap-15-quiz')) problems.push('professorat.html: falten les activitats a la taula');
   await page.close();
 }

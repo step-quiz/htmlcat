@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Guia per al professorat — HTMLCat</title>
+  <meta name="description" content="Com és el curs HTMLCat, com es corregeix, on es desa la feina de l'alumnat i com fer-ne el seguiment a classe.">
+  <link rel="icon" href="img/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/course.css">
+  <script type="module" src="js/pages/teacher-page.js"></script>
+</head>
+<body>
+  <div class="pagina">
+    <header class="barra">
+      <a class="logo logo--petit" href="../index.html"><img src="img/logo.svg" alt="">HTMLCat</a>
+    </header>
+    <main class="pagina-contingut guia">
+      <h1>🧑‍🏫 Guia per al professorat</h1>
+      <p class="guia__entrada">
+        HTMLCat és un curs d'HTML i CSS per a alumnes d'uns 15 anys, en català, que es fa
+        sencer al navegador: no cal instal·lar res ni crear cap compte. A més d'escriure pàgines
+        que funcionin, insisteix en el <strong>codi net</strong>: ben niat, ben indentat i amb
+        l'element que toca a cada lloc.
+      </p>
+
+      <nav class="guia__index" aria-label="Seccions de la guia">
+        <ol>
+          <li><a href="#estructura">Com és el curs</a></li>
+          <li><a href="#correccio">Com es corregeix</a></li>
+          <li><a href="#dades">On es desa la feina</a></li>
+          <li><a href="#seguiment">Seguiment a classe</a></li>
+          <li><a href="#capitols">Els capítols, un per un</a></li>
+          <li><a href="#accessibilitat">Accessibilitat</a></li>
+        </ol>
+      </nav>
+
+      <section id="estructura">
+        <h2>1. Com és el curs</h2>
+        <p>
+          Quinze capítols: la <strong>part A</strong> (1–8) és HTML; la <strong>part B</strong> (9–14), CSS,
+          i el <strong>capítol 15</strong> és un projecte final, la pàgina d'un club que l'alumne construeix
+          pas a pas. Cada capítol té, en aquest ordre:
+        </p>
+        <ul>
+          <li><strong>Exemples editables</strong>: un editor i el resultat al costat, que canvia mentre s'escriu.</li>
+          <li><strong>Errors típics</strong>: codi que gairebé funciona, i el panell <em>⚠ Problemes</em> explica per què no és correcte.</li>
+          <li><strong>Exercici</strong>: es corregeix sol amb el botó <em>✓ Comprova</em>. És el que posa la ✓ al capítol.</li>
+          <li><strong>Troba l'error</strong>: una pàgina que es veu bé però té errors al codi.</li>
+          <li><strong>Codi net</strong>: l'hàbit del capítol (tancar el que obres, el significat abans que l'aspecte…).</li>
+          <li><strong>Comprova què has après</strong>: un qüestionari de tres preguntes i, en alguns capítols, un problema de Parsons (ordenar i indentar línies de codi).</li>
+          <li><strong>Resum</strong>.</li>
+        </ul>
+        <p>
+          A part dels capítols hi ha l'<a href="editor/">editor lliure</a>, per fer qualsevol pàgina, i el
+          <a href="glossari.html">glossari</a>. Dins de cada capítol, el botó <em>📖 Glossari</em> de la barra
+          ensenya només el que ja s'ha vist fins allà.
+        </p>
+      </section>
+
+      <section id="correccio">
+        <h2>2. Com es corregeix</h2>
+        <p>
+          Cada exercici té unes <strong>comprovacions</strong>: que hi hagi els elements que es demanen, que
+          l'estil es vegi com toca, que la pàgina càpiga en un mòbil… En prémer <em>✓ Comprova</em>, l'alumne veu
+          quines ha superat i quines no, amb una explicació.
+        </p>
+        <p>
+          A més, el <strong>revisor de codi</strong> (el panell <em>⚠ Problemes</em>) llegeix el codi mentre
+          s'escriu i avisa d'errors (una etiqueta sense tancar, una imatge sense <code>alt</code>), d'avisos
+          i de consells. Només aplica el que ja s'ha ensenyat fins a aquell capítol. Un exercici no queda
+          superat si hi ha errors al panell: el navegador perdona molts errors, però HTMLCat els explica.
+        </p>
+        <p>
+          Les comprovacions miren l'estructura, no el text: dos alumnes poden fer pàgines molt diferents i
+          superar-les tots dos. Al projecte final (capítol 15) l'alumne fa la pàgina del seu propi club.
+        </p>
+      </section>
+
+      <section id="dades">
+        <h2>3. On es desa la feina</h2>
+        <p>
+          <strong>Al navegador de l'alumne, i enlloc més.</strong> No hi ha comptes, ni galetes, ni
+          estadístiques, ni cap petició a un altre servidor: res del que escriu l'alumne surt del seu
+          ordinador. El codi de cada exercici es desa sol mentre s'escriu, i els exercicis superats queden
+          marcats.
+        </p>
+        <p>
+          Per això, si l'alumne canvia d'ordinador, fa servir un altre navegador o s'esborren les dades
+          del navegador (cosa habitual als ordinadors compartits), <strong>no veurà la seva feina</strong>.
+          La solució és a la portada:
+        </p>
+        <ul>
+          <li><strong>📋 Exporta el meu progrés</strong> baixa un fitxer <code>htmlcat-progres-AAAA-MM-DD.json</code> amb els exercicis superats i el codi de tots els exercicis.</li>
+          <li><strong>📥 Importa</strong> torna a posar aquest fitxer en un altre navegador. No esborra res: els exercicis superats se sumen i, de cada codi, es queda el més nou.</li>
+        </ul>
+        <p class="avis">
+          💡 Als ordinadors compartits, demaneu a l'alumnat que exporti el progrés en acabar cada sessió i
+          el desi a la seva carpeta (Drive, Classroom, un llapis USB).
+        </p>
+      </section>
+
+      <section id="seguiment">
+        <h2>4. Seguiment a classe</h2>
+        <p>
+          La <a href="../index.html#capitols">portada</a> mostra, a cada alumne, quants exercicis i activitats ha
+          superat i, capítol per capítol, si ha fet l'exercici i quantes activitats. N'hi ha prou amb una
+          ullada a la seva pantalla.
+        </p>
+        <p>
+          Per a una entrega, l'alumne us pot enviar el fitxer exportat. És un fitxer de text (JSON) que es pot
+          obrir amb qualsevol editor: a <code>progress → goals</code> hi ha cada exercici superat amb el
+          moment de la primera vegada (en mil·lisegons des de 1970), i a <code>code:…</code>, el codi de cada
+          exercici. Els noms dels exercicis són els de la taula de la secció següent.
+        </p>
+        <p>
+          També el podeu importar al vostre navegador per veure-hi la feina de l'alumne tal com la veu ell
+          (feu-ho en una finestra privada, perquè s'afegiria al que ja tingueu).
+        </p>
+      </section>
+
+      <section id="capitols">
+        <h2>5. Els capítols, un per un</h2>
+        <p>
+          L'exercici principal és el que posa la ✓ al capítol. Les activitats són el «Troba l'error»
+          (<code>-bug</code>), el qüestionari (<code>-quiz</code>) i el problema de Parsons (<code>-parsons</code>).
+        </p>
+        <div class="guia__taula">
+          <table data-taula-curs>
+            <caption>Capítols del curs i noms dels exercicis</caption>
+            <thead>
+              <tr>
+                <th scope="col">Capítol</th>
+                <th scope="col">Títol</th>
+                <th scope="col">Exercici principal</th>
+                <th scope="col">Activitats</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="accessibilitat">
+        <h2>6. Accessibilitat</h2>
+        <ul>
+          <li>Tot es pot fer amb el <strong>teclat</strong>: a l'editor, <kbd>Tab</kbd> indenta; per sortir-ne, <kbd>Esc</kbd> i després <kbd>Tab</kbd>. Els problemes de Parsons es fan amb botons (↑ ↓ ⇤ ⇥).</li>
+          <li>Els textos tenen el contrast que demanen les pautes WCAG 2.1 AA, també en <strong>mode fosc</strong> (el del sistema).</li>
+          <li>Els lectors de pantalla llegeixen els resultats de les comprovacions i del panell de problemes.</li>
+          <li>El curs funciona en mòbils i en Chromebooks; els simuladors es carreguen a mesura que s'hi arriba.</li>
+        </ul>
+      </section>
+
+      <p>
+        Contingut: <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.ca">CC BY-NC-SA 4.0</a> (el podeu
+        fer servir i adaptar, sense ànim de lucre i citant-ne l'autor). Codi: <a href="LICENSE.txt">llicència MIT</a>.
+      </p>
+    </main>
+    <footer class="peu">
+      <p>© 2026 <strong>David Arso Civil</strong> · INS Miquel Tarradell · <a href="../index.html">Portada d'HTMLCat</a></p>
+    </footer>
+  </div>
+</body>
+</html>

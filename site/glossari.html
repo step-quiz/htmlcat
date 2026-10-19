@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Glossari — HTMLCat</title>
+  <meta name="description" content="Totes les etiquetes, atributs, propietats CSS i conceptes del curs HTMLCat, amb una frase cadascun.">
+  <link rel="icon" href="img/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/course.css">
+  <script type="module" src="js/pages/glossary-page.js"></script>
+</head>
+<body>
+  <div class="pagina">
+    <header class="barra">
+      <a class="logo logo--petit" href="../index.html"><img src="img/logo.svg" alt="">HTMLCat</a>
+    </header>
+    <main class="pagina-contingut">
+      <h1>📖 Glossari</h1>
+      <p>
+        Totes les etiquetes, atributs, propietats CSS i conceptes del curs, amb una frase cadascun i el
+        capítol on surten per primera vegada. Dins de cada capítol, el botó <strong>📖 Glossari</strong> de
+        la barra mostra només el que ja s'ha vist fins allà.
+      </p>
+      <label class="glossari__filtre">
+        <span>Busca:</span>
+        <input type="search" autocomplete="off" data-glossari-filtre>
+      </label>
+      <div class="glossari" data-glossari></div>
+    </main>
+    <footer class="peu">
+      <p><a href="../index.html">← Torna a la portada d'HTMLCat</a></p>
+    </footer>
+  </div>
+</body>
+</html>

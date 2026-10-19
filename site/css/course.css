@@ -457,3 +457,180 @@
   margin-bottom: 0;
   color: var(--color-muted);
 }
+
+/* ── Glossari: botó de la barra, finestra i llista (també a glossari.html) ── */
+
+.course-bar__glossari {
+  display: inline-flex;
+  gap: var(--space-1);
+  align-items: center;
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-size: 0.9375rem;
+  cursor: pointer;
+}
+
+/* Al mòbil, només la icona (el nom accessible continua essent «Glossari») */
+@media (max-width: 30rem) {
+  .course-bar__etiqueta {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+@media (min-width: 64rem) {
+  .course-bar__glossari {
+    margin-left: auto;
+  }
+
+  .course-bar__glossari + .course-bar__link {
+    margin-left: 0;
+  }
+}
+
+.glossari-finestra {
+  width: min(42rem, calc(100% - 2 * var(--space-3)));
+  max-height: calc(100% - 2 * var(--space-4));
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.glossari-finestra::backdrop {
+  background: rgb(0 0 0 / 0.45);
+}
+
+.glossari-finestra__capcalera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.glossari-finestra__capcalera h2 {
+  margin: 0;
+}
+
+.glossari-finestra__tanca {
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  cursor: pointer;
+}
+
+.glossari-finestra__intro {
+  color: var(--color-muted);
+}
+
+.glossari-finestra__tot {
+  display: inline-block;
+  margin-top: var(--space-3);
+}
+
+.glossari__filtre {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+  margin: var(--space-3) 0;
+}
+
+.glossari__filtre input {
+  flex: 1;
+  min-width: 10rem;
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-bg);
+  color: var(--color-text);
+  font: inherit;
+}
+
+.glossari__tipus {
+  margin: var(--space-4) 0 var(--space-2);
+  font-size: 1.0625rem;
+}
+
+.glossari__llista {
+  margin: 0;
+}
+
+.glossari__entrada {
+  padding: var(--space-2) 0;
+  border-top: 1px solid var(--color-border);
+}
+
+.glossari__terme {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: baseline;
+  font-weight: 700;
+}
+
+.glossari__capitol {
+  color: var(--color-muted);
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
+.glossari__def {
+  margin: 0;
+}
+
+/* ── Guia per al professorat ── */
+
+.guia__entrada {
+  font-size: 1.125rem;
+}
+
+.guia__index ol {
+  padding-left: var(--space-4);
+}
+
+.guia__taula {
+  overflow-x: auto;
+}
+
+.guia__taula table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.guia__taula caption {
+  margin-bottom: var(--space-2);
+  color: var(--color-muted);
+  text-align: left;
+}
+
+.guia__taula th,
+.guia__taula td {
+  padding: var(--space-1) var(--space-2);
+  border-bottom: 1px solid var(--color-border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.guia__taula code,
+.guia__taula th {
+  white-space: nowrap;
+}
+
+@media (max-width: 30rem) {
+  .course-bar {
+    gap: var(--space-2);
+  }
+}
